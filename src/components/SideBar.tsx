@@ -7,29 +7,33 @@ import {
   BarChart3,
   ClipboardCopy,
   ClipboardPaste,
-  FileEdit,
   Grid2X2,
-  Power,
   Settings,
   User,
-  UserCircle,
   Warehouse,
 } from "lucide-react";
 import Image from "next/image";
 import LOGO from "../../public/logo.jpg";
-import { useEffect, useState } from "react";
 
-export default function SideBar() {
-  console.log("This is from the sidebar component");
-  const userData = getCurrentUserDetails();
-  // console.log("User Data:", userData);
-  // const [userData, setUserData] = useState("");
 
-  // useEffect(() => {
-  //   const userData = getCurrentUserDetails();
-  //   setUserData(userData);
-  //   console.log("This is inside the useEffect");
-  // }, []);
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AuthUserWithRole } from "@/lib/contexts/AuthContext";
+export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
+  const pathname = usePathname();
+
+  // Define the navigation items in an array for cleaner code
+  const navItems = [
+    { name: "Dashboard", href: "/dashboard", icon: Grid2X2 },
+    { name: "Inventory", href: "/inventory", icon: Warehouse },
+    { name: "Quick Add/ Scan Item", href: "/quick-add", icon: ClipboardCopy },
+    { name: "Dispense Item", href: "/dispense-item", icon: ClipboardPaste },
+    { name: "Transactions", href: "/transactions", icon: ArrowLeftRight },
+    { name: "Reports", href: "/reports", icon: BarChart3 },
+    { name: "Settings", href: "/settings", icon: Settings },
+  ];
+
 
   return (
     <div className="flex flex-col text-sm px-3 py-4 rounded-xl h-full gap-4 overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-50/10 scrollbar-track-dashboardBackground scrollbar-corner-dashboardBackground">
@@ -49,10 +53,19 @@ export default function SideBar() {
             height={24}
             className="text-primary w-7 h-7 bg-[#001A10] rounded-full p-1 m-0"
           />
-          <div className="flex flex-col ">
-            <p className=" text-primary text-sm font-bold">User name</p>
-            <p className="text-gray-400 text-xs">User email</p>
-            {/* <p>{userData}</p> */}
+
+
+
+          <div className="flex flex-col  overflow-hidden">
+            {/* Display the user's email if available */}
+            <p className=" text-primary text-xs font-medium line-clamp-1">
+              {user ? user.email : "User Name"}
+            </p>
+            {/* Display the user's role */}
+            <p className="text-gray-400 text-xs">
+              {user ? user.role : "User role"}
+            </p>
+
           </div>
         </div>
       </div>
@@ -60,51 +73,58 @@ export default function SideBar() {
       <section className="flex flex-col gap-1 items-start justify-start">
         <p className="text-slate-50/50 text-xs">General</p>
 
-        <div className="w-full rounded-xl bg-primary flex items-center justify-start gap-2 p-2 ">
-          <Grid2X2 className="text-[#f2f2f2] text-md w-5 h-5" />
-          <Link href={"/dashboard"} className="text-sm text-[#f2f2f2]">
-            Dashboard
-          </Link>
-        </div>
 
-        <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <Warehouse className="text-[#B3C3CB] text-md w-5 h-5" />
-          <div className="text-sm text-[#B3C3CB]">Inventory</div>
-        </div>
 
-        <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <ClipboardCopy className="text-[#B3C3CB] text-md w-5 h-5" />
-          <Link href={"/additem"} className="text-sm text-[#B3C3CB]">
-            Quick Add/ Scan Item
-          </Link>
-        </div>
 
-        <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <ClipboardPaste className="text-[#B3C3CB] text-md w-5 h-5" />
-          <Link href={"/dispenseitem"} className="text-sm text-[#B3C3CB]">
-            Dispense Item
-          </Link>
-        </div>
+        {navItems.slice(0, 6).map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`w-full rounded-xl flex hover:bg-primary/10 items-center justify-start gap-2 p-2 ${
+                isActive ? "bg-primary" : ""
+              }`}
+            >
+              <item.icon
+                className={`text-md w-5 h-5 ${
+                  isActive ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
+                }`}
+              />
+              <div
+                className={`text-sm ${
+                  isActive ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
+                }`}
+              >
+                {item.name}
+              </div>
+            </Link>
+          );
+        })}
 
-        <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <ArrowLeftRight className="text-[#B3C3CB] text-md w-5 h-5" />
-          <div className="text-sm text-[#B3C3CB]">Transactions</div>
-        </div>
-
-        <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          {/* Changed icon to BarChart3 for Reports */}
-          <BarChart3 className="text-[#B3C3CB] text-md w-5 h-5" />
-          <div className="text-sm text-[#B3C3CB]">Reports</div>
-        </div>
       </section>
 
       <section className="flex flex-col gap-1 items-start justify-start">
         <p className="text-slate-50/50 text-xs">Other</p>
-
-        <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <Settings className="text-[#B3C3CB] text-md w-5 h-5" />
-          <div className="text-sm text-[#B3C3CB]">Settings</div>
-        </div>
+        <Link
+          href="/settings"
+          className={`w-full rounded-xl flex items-center hover:bg-primary/10 justify-start gap-2 p-2 ${
+            pathname === "/settings" ? "bg-primary" : ""
+          }`}
+        >
+          <Settings
+            className={`text-md w-5 h-5 ${
+              pathname === "/settings" ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
+            }`}
+          />
+          <div
+            className={`text-sm ${
+              pathname === "/settings" ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
+            }`}
+          >
+            Settings
+          </div>
+        </Link>
       </section>
     </div>
   );
