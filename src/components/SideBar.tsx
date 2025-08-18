@@ -31,7 +31,7 @@ export default function SideBar() {
           <User
             width={24}
             height={24}
-            className="text-primary w-8 h-8 bg-[#001A10] rounded-full p-1 m-0"
+            className="text-primary w-7 h-7 bg-[#001A10] rounded-full p-1 m-0"
           />
           <div className="flex flex-col ">
             <p className=" text-primary text-sm font-bold">User name</p>
@@ -44,33 +44,33 @@ export default function SideBar() {
         <p className="text-slate-50/50 text-xs">General</p>
 
         <div className="w-full rounded-xl bg-primary flex items-center justify-start gap-2 p-2 ">
-          <Grid2X2 className="text-[#f2f2f2] text-md" />
+          <Grid2X2 className="text-[#f2f2f2] text-md w-5 h-5" />
           <div className="text-sm text-[#f2f2f2]">Dashboard</div>
         </div>
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <Warehouse className="text-[#B3C3CB] text-md" />
+          <Warehouse className="text-[#B3C3CB] text-md w-5 h-5" />
           <div className="text-sm text-[#B3C3CB]">Inventory</div>
         </div>
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <ClipboardCopy className="text-[#B3C3CB] text-md" />
+          <ClipboardCopy className="text-[#B3C3CB] text-md w-5 h-5" />
           <div className="text-sm text-[#B3C3CB]">Quick Add/ Scan Item</div>
         </div>
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <ClipboardPaste className="text-[#B3C3CB] text-md" />
+          <ClipboardPaste className="text-[#B3C3CB] text-md w-5 h-5" />
           <div className="text-sm text-[#B3C3CB]">Dispense Item</div>
         </div>
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <ArrowLeftRight className="text-[#B3C3CB] text-md" />
+          <ArrowLeftRight className="text-[#B3C3CB] text-md w-5 h-5" />
           <div className="text-sm text-[#B3C3CB]">Transactions</div>
         </div>
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
           {/* Changed icon to BarChart3 for Reports */}
-          <BarChart3 className="text-[#B3C3CB] text-md" />
+          <BarChart3 className="text-[#B3C3CB] text-md w-5 h-5" />
           <div className="text-sm text-[#B3C3CB]">Reports</div>
         </div>
       </section>
@@ -79,7 +79,7 @@ export default function SideBar() {
         <p className="text-slate-50/50 text-xs">Other</p>
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
-          <Settings className="text-[#B3C3CB] text-md" />
+          <Settings className="text-[#B3C3CB] text-md w-5 h-5" />
           <div className="text-sm text-[#B3C3CB]">Settings</div>
         </div>
       </section>
