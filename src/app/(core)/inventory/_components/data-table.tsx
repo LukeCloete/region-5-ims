@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -103,7 +104,7 @@ export function DataTable<TData, TValue>({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="border-[1px] border-primary-foreground/70">
+      <div className="border-[1px] border-foreground/20">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -112,7 +113,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className="bg-gray-950 text-primary-foreground/70"
+                      className="px-4 bg-background text-foreground/70"
                     >
                       {header.isPlaceholder
                         ? null
@@ -132,11 +133,16 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={cn(
+                    "hover:bg-gray-800", // Your default hover color
+                    row.getIsSomeSelected() && "bg-foreground/20",
+                    "border-[1px] border-foreground/20 hover:bg-foreground/10 cursor-pointer "
+                  )}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="text-primary-foreground"
+                      className="text-foreground text-center focus:bg-foreground/10"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,

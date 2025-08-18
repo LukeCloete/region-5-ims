@@ -29,6 +29,14 @@ export interface Item {
 // Define the columns.
 export const columns: ColumnDef<Item>[] = [
   {
+    id: "rowNumber",
+    header: "#",
+    cell: ({ row }) => {
+      // The row.index is a 0-based number, so we add 1 to make it 1-based
+      return <div>{row.index + 1}</div>;
+    },
+  },
+  {
     id: "select",
     header: ({ table }) => (
       <Checkbox

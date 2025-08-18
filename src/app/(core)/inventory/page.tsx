@@ -134,8 +134,8 @@ async function getData(): Promise<Item[]> {
 export default async function page() {
   const data = await getData();
   return (
-    <div className="border border-primary-foreground/50 rounded-xl  p-4 gap-4 justify-start items-start w-full">
-      <h1 className="py-2 w-full border-b-[1px] border-b-primary-foreground/50 text-primary-foreground font-bold text-2xl">
+    <div className="border-2 border-foreground/20 rounded-xl  p-4 gap-4 justify-start items-start w-full">
+      <h1 className="py-2 w-full border-b-[1px] border-b-foreground/20 text-foreground font-bold text-2xl">
         Inventory
       </h1>
       <DataTable columns={columns} data={data} />
