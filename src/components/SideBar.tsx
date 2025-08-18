@@ -1,4 +1,7 @@
+"use client";
 import { signOut } from "@/lib/auth";
+import Link from "next/link";
+import { getCurrentUserDetails } from "../app/(core)/additem/_lib/actions";
 import {
   ArrowLeftRight,
   BarChart3,
@@ -14,7 +17,20 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import LOGO from "../../public/logo.jpg";
+import { useEffect, useState } from "react";
+
 export default function SideBar() {
+  console.log("This is from the sidebar component");
+  const userData = getCurrentUserDetails();
+  // console.log("User Data:", userData);
+  // const [userData, setUserData] = useState("");
+
+  // useEffect(() => {
+  //   const userData = getCurrentUserDetails();
+  //   setUserData(userData);
+  //   console.log("This is inside the useEffect");
+  // }, []);
+
   return (
     <div className="flex flex-col text-sm px-3 py-4 rounded-xl h-full gap-4 overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-50/10 scrollbar-track-dashboardBackground scrollbar-corner-dashboardBackground">
       <div className="flex flex-col items-center justify-start gap-2">
@@ -36,6 +52,7 @@ export default function SideBar() {
           <div className="flex flex-col ">
             <p className=" text-primary text-sm font-bold">User name</p>
             <p className="text-gray-400 text-xs">User email</p>
+            {/* <p>{userData}</p> */}
           </div>
         </div>
       </div>
@@ -45,7 +62,9 @@ export default function SideBar() {
 
         <div className="w-full rounded-xl bg-primary flex items-center justify-start gap-2 p-2 ">
           <Grid2X2 className="text-[#f2f2f2] text-md w-5 h-5" />
-          <div className="text-sm text-[#f2f2f2]">Dashboard</div>
+          <Link href={"/dashboard"} className="text-sm text-[#f2f2f2]">
+            Dashboard
+          </Link>
         </div>
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
@@ -55,12 +74,16 @@ export default function SideBar() {
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
           <ClipboardCopy className="text-[#B3C3CB] text-md w-5 h-5" />
-          <div className="text-sm text-[#B3C3CB]">Quick Add/ Scan Item</div>
+          <Link href={"/additem"} className="text-sm text-[#B3C3CB]">
+            Quick Add/ Scan Item
+          </Link>
         </div>
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
           <ClipboardPaste className="text-[#B3C3CB] text-md w-5 h-5" />
-          <div className="text-sm text-[#B3C3CB]">Dispense Item</div>
+          <Link href={"/dispenseitem"} className="text-sm text-[#B3C3CB]">
+            Dispense Item
+          </Link>
         </div>
 
         <div className="w-full rounded-xl flex items-center justify-start gap-2 p-2 ">
