@@ -9,7 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { UserRole } from "../auth";
 import { app } from "../firebase";
 
-interface AuthUserWithRole {
+export interface AuthUserWithRole {
   uid: string;
   email: string | null;
   role: UserRole | null;

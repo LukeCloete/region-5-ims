@@ -14,7 +14,8 @@ import Image from "next/image";
 import LOGO from "../../public/logo.jpg";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-export default function SideBar() {
+import { AuthUserWithRole } from "@/lib/contexts/AuthContext";
+export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
   const pathname = usePathname();
 
   // Define the navigation items in an array for cleaner code
@@ -46,9 +47,15 @@ export default function SideBar() {
             height={24}
             className="text-primary w-7 h-7 bg-[#001A10] rounded-full p-1 m-0"
           />
-          <div className="flex flex-col ">
-            <p className=" text-primary text-sm font-bold">User name</p>
-            <p className="text-gray-400 text-xs">User email</p>
+          <div className="flex flex-col  overflow-hidden">
+            {/* Display the user's email if available */}
+            <p className=" text-primary text-xs font-medium line-clamp-1">
+              {user ? user.email : "User Name"}
+            </p>
+            {/* Display the user's role */}
+            <p className="text-gray-400 text-xs">
+              {user ? user.role : "User role"}
+            </p>
           </div>
         </div>
       </div>
