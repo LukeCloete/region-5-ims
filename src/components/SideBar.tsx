@@ -41,8 +41,8 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
   const navItems = [
     { name: "Dashboard", href: "/dashboard", icon: Grid2X2 },
     { name: "Inventory", href: "/inventory", icon: Warehouse },
-    { name: "Quick Add/ Scan Item", href: "/add-item", icon: ClipboardCopy },
-    { name: "Dispense Item", href: "/dispense-item", icon: ClipboardPaste },
+    { name: "Add/ Scan Item", href: "/add-item", icon: ClipboardCopy },
+    // { name: "Dispense Item", href: "/dispense-item", icon: ClipboardPaste },
     { name: "Transactions", href: "/transactions", icon: ArrowLeftRight },
     // { name: "Reports", href: "/reports", icon: BarChart3 },
     // { name: "Settings", href: "/settings", icon: Settings },
@@ -110,7 +110,7 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
         })}
 
         {/* Conditionally render the Reports section ONLY if the user is an admin */}
-        {user && user.role === "admin" && (
+        {/* {user && user.role === "admin" && (
           <Link
             href="/reports"
             className={`w-full rounded-xl flex items-center hover:bg-primary/10 justify-start gap-2 p-2 ${
@@ -130,7 +130,7 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
               Reports
             </div>
           </Link>
-        )}
+        )} */}
       </section>
 
       {/* <section className="flex flex-col gap-1 items-start justify-start">

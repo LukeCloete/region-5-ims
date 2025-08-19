@@ -27,7 +27,7 @@ export async function getAllTransactions(): Promise<Transaction[]> {
       }
 
       // Safely convert the 'dateOfPurchase' field if it exists and is a Timestamp.
-      let dateOfPurchase: string | null = "todfay";
+      let dateOfPurchase: string | null = "N/A";
       if (docData.dateOfPurchase instanceof Timestamp) {
         dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
       }
