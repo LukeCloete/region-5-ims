@@ -1,7 +1,7 @@
 "use client";
 import { signOut } from "@/lib/auth";
 import Link from "next/link";
-import { getCurrentUserDetails } from "../app/(core)/additem/_lib/actions";
+import { getCurrentUserDetails } from "../app/(core)/add-item/_lib/actions";
 import {
   ArrowLeftRight,
   BarChart3,
@@ -14,10 +14,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import LOGO from "../../public/logo.jpg";
-
-
-
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AuthUserWithRole } from "@/lib/contexts/AuthContext";
 export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
@@ -27,13 +23,12 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
   const navItems = [
     { name: "Dashboard", href: "/dashboard", icon: Grid2X2 },
     { name: "Inventory", href: "/inventory", icon: Warehouse },
-    { name: "Quick Add/ Scan Item", href: "/quick-add", icon: ClipboardCopy },
+    { name: "Quick Add/ Scan Item", href: "/add-item", icon: ClipboardCopy },
     { name: "Dispense Item", href: "/dispense-item", icon: ClipboardPaste },
     { name: "Transactions", href: "/transactions", icon: ArrowLeftRight },
     { name: "Reports", href: "/reports", icon: BarChart3 },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
-
 
   return (
     <div className="flex flex-col text-sm px-3 py-4 rounded-xl h-full gap-4 overflow-y-scroll scrollbar-thin scrollbar-thumb-slate-50/10 scrollbar-track-dashboardBackground scrollbar-corner-dashboardBackground">
@@ -54,8 +49,6 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
             className="text-primary w-7 h-7 bg-[#001A10] rounded-full p-1 m-0"
           />
 
-
-
           <div className="flex flex-col  overflow-hidden">
             {/* Display the user's email if available */}
             <p className=" text-primary text-xs font-medium line-clamp-1">
@@ -65,16 +58,12 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
             <p className="text-gray-400 text-xs">
               {user ? user.role : "User role"}
             </p>
-
           </div>
         </div>
       </div>
 
       <section className="flex flex-col gap-1 items-start justify-start">
         <p className="text-slate-50/50 text-xs">General</p>
-
-
-
 
         {navItems.slice(0, 6).map((item) => {
           const isActive = pathname === item.href;
@@ -101,7 +90,6 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
             </Link>
           );
         })}
-
       </section>
 
       <section className="flex flex-col gap-1 items-start justify-start">
