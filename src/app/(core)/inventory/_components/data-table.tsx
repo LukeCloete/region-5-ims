@@ -65,8 +65,18 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  /*  
+  Looks like data is where i can get the actual data
+*/
   return (
     <div>
+      <button
+        onClick={() => {
+          console.log(data);
+        }}
+      >
+        What is this
+      </button>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter barcodes..."

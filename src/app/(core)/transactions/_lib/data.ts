@@ -49,6 +49,9 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         category: docData.category || "N/A",
         serialNumber: docData.serialNumber || "N/A",
         dateOfPurchase: docData.dateOfPurchase,
+        ["item-name"]: docData["item-name"] || "N/A",
+        itemName: docData["item-name"] || "N/A",
+        remaining: docData.remaining ?? 0,
       };
     });
 

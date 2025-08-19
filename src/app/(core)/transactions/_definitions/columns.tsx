@@ -8,7 +8,9 @@ import { Timestamp } from "firebase/firestore";
 
 export interface Transaction {
   itemId: string;
+  itemName: string;
   quantity: number;
+  remaining: number;
   source: string;
   barcode?: string;
   destination: string;
@@ -20,6 +22,17 @@ export interface Transaction {
   serialNumber?: string;
   dateOfPurchase?: Timestamp;
 }
+
+// function calculateRemaining() {
+//   console.log("This  function calcualtes the remaining");
+//   /* 1. Identify item by item id.
+//      2. See if that value has a stock-out type
+//      3. get the quantity from inventory table -  get the quantity ( from transaction table)
+//      4. This is the remaining value.
+
+//      Maybe this can be done on the database?
+//   */
+// }
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -65,6 +78,20 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
+    accessorKey: "item-name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Item name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
     accessorKey: "itemId",
     header: ({ column }) => {
       return (
@@ -100,26 +127,40 @@ export const columns: ColumnDef<Transaction>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Quantity
+          Quantity Issued
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "source",
+    accessorKey: "remaining",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Source/Supplier
+          Remaining
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
+  // {
+  //   accessorKey: "source",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Source/Supplier
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "destination",
     header: ({ column }) => {
@@ -162,20 +203,7 @@ export const columns: ColumnDef<Transaction>[] = [
       );
     },
   },
-  {
-    accessorKey: "serialNumber",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Serial Number
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
+
   {
     accessorKey: "userId",
     header: ({ column }) => {
