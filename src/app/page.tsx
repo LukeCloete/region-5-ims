@@ -1,3 +1,4 @@
+"use client";
 import { auth } from "@/lib/firebase";
 import { redirect } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
