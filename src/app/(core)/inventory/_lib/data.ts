@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Item } from "../_definitions/columns";
 
@@ -10,38 +10,44 @@ import { Item } from "../_definitions/columns";
  */
 export async function getAllItems(): Promise<Item[]> {
   try {
-    // Get a reference to the 'items' collection.
     const itemsCollectionRef = collection(db, "items");
-
-    // Fetch all documents from the collection.
     const itemsSnapshot = await getDocs(itemsCollectionRef);
 
-    // Map the documents to the Item interface.
     const items: Item[] = itemsSnapshot.docs.map((doc) => {
       const docData = doc.data();
 
-      // Ensure that the barcode is a number and convert the Firestore Timestamp
-      // to a JavaScript Date object.
+      // Handle barcode conversion, ensuring it's a number and not NaN.
+      // We use radix 10 to ensure it's parsed as a decimal number.
+      let barcodeValue = docData.barcode;
+      if (typeof barcodeValue === "string") {
+        barcodeValue = parseInt(barcodeValue, 10);
+      }
+      if (typeof barcodeValue !== "number" || isNaN(barcodeValue)) {
+        barcodeValue = 0; // Default to 0 if invalid.
+      }
+
+      // Safely convert Firestore Timestamp to a Date object or null.
+      let dateOfPurchase: Date | null = null;
+      if (docData.dateOfPurchase instanceof Timestamp) {
+        dateOfPurchase = docData.dateOfPurchase.toDate();
+      }
+
       return {
         id: doc.id,
-        barcode:
-          typeof docData.barcode === "number"
-            ? docData.barcode
-            : parseInt(docData.barcode, 13),
-        serialNumber: docData.serialNumber,
+        barcode: barcodeValue,
+        serialNumber: docData.serialNumber || "N/A",
         cluster: docData.cluster,
         name: docData.name,
         quantity: docData.quantity,
         categoryId: docData.categoryId,
-        description: docData.description,
-        dateOfPurchase: docData.dateOfPurchase || "",
-      } as Item; // Cast to Item to satisfy the return type
+        description: docData.description || "No description",
+        dateOfPurchase: dateOfPurchase,
+      } as Item;
     });
 
     return items;
   } catch (error) {
     console.error("Failed to fetch inventory data:", error);
-    // Return an empty array on failure to prevent app crashes.
     return [];
   }
 }
