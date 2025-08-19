@@ -4,8 +4,6 @@ import { app, db } from "@/lib/firebase";
 import {
   collection,
   doc,
-  getDoc,
-  getFirestore,
   runTransaction,
   serverTimestamp,
   Timestamp,

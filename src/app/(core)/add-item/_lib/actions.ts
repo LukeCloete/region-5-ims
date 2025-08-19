@@ -3,16 +3,7 @@
 
 // Okay I create a function to enter an item into the database
 import { db } from "@/lib/firebase";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  updateDoc,
-  Timestamp,
-  serverTimestamp,
-} from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 export async function addItem(formData: FormData) {
   const rawFormData = {

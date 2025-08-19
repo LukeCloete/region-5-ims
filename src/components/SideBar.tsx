@@ -9,9 +9,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import {
   ArrowLeftRight,
@@ -19,7 +17,6 @@ import {
   ClipboardCopy,
   ClipboardPaste,
   Grid2X2,
-  Settings,
   User,
   Warehouse,
   LogOut,
