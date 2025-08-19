@@ -21,7 +21,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { cn, getErrorMessage } from "@/lib/utils";
 import { useAuthContext } from "@/lib/contexts/AuthContext";
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { CalendarIcon } from "lucide-react";
 import {

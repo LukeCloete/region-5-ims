@@ -133,22 +133,6 @@ export default function Page() {
     }
   };
 
-  function getFormattedTimestamp(dateObject: Date): string {
-    const year = dateObject.getFullYear();
-    const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
-    const day = dateObject.getDate().toString().padStart(2, "0");
-    const hours = dateObject.getHours().toString().padStart(2, "0");
-    const minutes = dateObject.getMinutes().toString().padStart(2, "0");
-    const seconds = dateObject.getSeconds().toString().padStart(2, "0");
-    const milliseconds = dateObject
-      .getMilliseconds()
-      .toString()
-      .padStart(3, "0");
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
-  }
-  const now = new Date(); // Get the current date and time
-
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden bg-dashboardBackgroundDark px-2 py-4 ">
       {/* <div className="w-full h-full flex-none md:w-64">
