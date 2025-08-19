@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Timestamp } from "firebase/firestore";
 
 export interface Transaction {
   itemId: string;
@@ -13,12 +14,11 @@ export interface Transaction {
   destination: string;
   type: "stock-in" | "stock-out";
   userId: string;
-  date: Date;
+  date: Timestamp;
   cluster: string;
   category: string;
   serialNumber?: string;
-  dateOfPurchase?: Date;
-  quantityRemaining?: number;
+  dateOfPurchase?: Timestamp;
 }
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -204,8 +204,16 @@ export const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ getValue }) => {
-      const date = new Date(getValue() as string);
-      return date ? date.toLocaleDateString() : "N/A";
+      const dateString = getValue() as Timestamp | null;
+
+      // Check if the date string is valid before creating a Date object.
+      if (!dateString) {
+        return "N/A"; // Or any placeholder you prefer for a missing date.
+      }
+      const date = new Date(dateString.seconds * 1000);
+
+      // Ensure the date is not 'Invalid Date' before formatting.
+      return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleDateString();
     },
   },
   {
@@ -216,14 +224,22 @@ export const columns: ColumnDef<Transaction>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date of Transaction
+          Date
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ getValue }) => {
-      const date = new Date(getValue() as string);
-      return date.toLocaleDateString();
+      const dateString = getValue() as Timestamp | null;
+
+      // Check if the date string is valid before creating a Date object.
+      if (!dateString) {
+        return "N/A"; // Or any placeholder you prefer for a missing date.
+      }
+      const date = new Date(dateString.seconds * 1000);
+
+      // Ensure the date is not 'Invalid Date' before formatting.
+      return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleDateString();
     },
   },
 ];
