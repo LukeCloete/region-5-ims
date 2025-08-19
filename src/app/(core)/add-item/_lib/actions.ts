@@ -25,8 +25,14 @@ export async function addItem(formData: FormData) {
     dateOfPurchase: formData.get("date-of-purchase"),
   };
 
+  // Convert match_date to Timestamp
+  // const dateOfPurchaseAsTimestamp = rawFormData.dateOfPurchase
+  //   ? Timestamp.fromDate(new Date(rawFormData.dateOfPurchase.toString()))
+  //   : null;
+
+  const barcodeAsNumber = Number(rawFormData.barcode);
   const itemData = {
-    barCode: rawFormData.barcode,
+    barCode: barcodeAsNumber,
     serialNumber: rawFormData.serialNumber,
     cluster: rawFormData.cluster,
     category: rawFormData.category,
@@ -48,23 +54,4 @@ export async function addItem(formData: FormData) {
   //   // docSnap.data() will be undefined in this case
   //   console.log("No such document!");
   // }
-}
-
-/* Maybe
-
-    1.first find the document ID of the currently signed in user,
-    2. use that as the third argument in the 'doc' function, instead of hardcoding it like i am doing rn.
-*/
-export async function getCurrentUserDetails() {
-  const docRef = doc(db, "users", "tgqiJjA2znXIbdSivKuE8SSZdFf1");
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-    console.log("email:", docSnap.data().email);
-    console.log("name:", docSnap.data().name);
-  } else {
-    // docSnap.data() will be undefined in this case
-    // console.log("No such document!");
-  }
-  return docSnap.data();
 }
