@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "@/lib/firebase";
 import {
   collection,
+  deleteDoc,
   doc,
   runTransaction,
   serverTimestamp,
@@ -117,4 +118,13 @@ export async function updateItem(id: string, formData: FormData) {
 
   // Redirect the user back to the inventory page.
   redirect("/dashboard/inventory");
+}
+
+export async function deleteItem(id: string) {
+  try {
+    await deleteDoc(doc(db, "items", id));
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error) };
+  }
 }
