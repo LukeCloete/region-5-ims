@@ -1,4 +1,3 @@
-
 "use client";
 
 import { z } from "zod";
@@ -283,7 +282,6 @@ export default function DispenseItemPage() {
                           disabled={(date) =>
                             date > new Date() || date < new Date("1900-01-01")
                           }
-                          initialFocus
                         />
                       </PopoverContent>
                     </Popover>
@@ -321,7 +319,6 @@ export default function DispenseItemPage() {
           </Form>
         </CardContent>
       </Card>
-
     </div>
   );
 }

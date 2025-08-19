@@ -1,5 +1,5 @@
 import { DataTable } from "./_components/data-table";
-import { columns, Transaction } from "./_definitions/columns";
+import { columns } from "./_definitions/columns";
 import { getAllTransactions } from "./_lib/data";
 
 // async function getData(): Promise<Transaction[]> {
