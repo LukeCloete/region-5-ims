@@ -157,7 +157,8 @@ export default function Page() {
                 Use a barcode scanner or continue with manual form entry below
               </CardTitle>
               <CardDescription className="text-white">
-                Click 'Scan' to add an item if you have a barcode scanner
+                Click &lsquo;Scan&rsquo; to add an item if you have a barcode
+                scanner
               </CardDescription>
 
               <Dialog>

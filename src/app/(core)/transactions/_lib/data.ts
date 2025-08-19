@@ -31,6 +31,7 @@ export async function getAllTransactions(): Promise<Transaction[]> {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       let dateOfPurchase: string | null = "N/A";
       if (docData.dateOfPurchase instanceof Timestamp) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
       }
 
