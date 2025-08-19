@@ -95,16 +95,6 @@ export default function Page() {
     },
   });
 
-  //   const rawFormData = {
-  //   barcode: formData.get("barcode"),
-  //   serialNumber: formData.get("serial-number"),
-  //   cluster: formData.get("cluster"),
-  //   category: formData.get("category"),
-  //   itemName: formData.get("item-name"),
-  //   quantity: formData.get("quantity"),
-  //   description: formData.get("description"),
-  //   dateOfPurchase: formData.get("date-of-purchase"),
-  // };
   const [dialogBarcode, setDialogBarcode] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const handleDialogSubmit = () => {
