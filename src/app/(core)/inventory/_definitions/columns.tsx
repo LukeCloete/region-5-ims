@@ -19,6 +19,7 @@ import { deleteItem } from "../_lib/actions";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import DeleteConfirmationDialog from "../_components/DeleteActionDialog";
 
 // Define the interface for your data.
 export interface Item {
@@ -231,39 +232,10 @@ export const columns: ColumnDef<Item>[] = [
             <Link href={`/inventory/edit/${item.id}`}>
               <DropdownMenuItem>Edit Item</DropdownMenuItem>
             </Link>
-            <DropdownMenuItem onClick={() => setShowConfirm(true)}>
-              Delete Item
-            </DropdownMenuItem>
-            {showConfirm && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                <div className="bg-white p-6 rounded-lg shadow-lg dark:bg-zinc-800">
-                  <h3 className="text-lg font-bold">Confirm Deletion</h3>
-                  <p className="my-2">
-                    Are you sure you want to delete this item? This action
-                    cannot be undone.
-                  </p>
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowConfirm(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      onClick={handleDelete}
-                      disabled={isDeleting}
-                    >
-                      {isDeleting ? (
-                        <MoreHorizontal className="h-4 w-4 animate-spin" />
-                      ) : (
-                        "Delete"
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
+            <DeleteConfirmationDialog
+              item={row.original}
+              onDelete={handleDelete}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       );
