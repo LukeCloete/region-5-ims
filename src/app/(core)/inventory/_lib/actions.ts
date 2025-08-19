@@ -7,6 +7,7 @@ import {
   getDoc,
   getFirestore,
   runTransaction,
+  serverTimestamp,
   Timestamp,
 } from "firebase/firestore";
 import { addDoc } from "firebase/firestore";
@@ -49,6 +50,8 @@ export async function markItemAsStockOut(
     // Update the item's quantity.
     transaction.update(itemRef, { quantity: newQuantity });
 
+    const currentTimestampFromSA = serverTimestamp();
+
     // Create a new transaction record.
     const transactionData = {
       itemId: itemRef.id,
@@ -57,6 +60,7 @@ export async function markItemAsStockOut(
       type: "stock-out",
       userId: userId,
       date: Timestamp.fromDate(new Date()),
+      currentTimestamp: currentTimestampFromSA,
     };
     await addDoc(transactionsCollectionRef, transactionData);
   });
