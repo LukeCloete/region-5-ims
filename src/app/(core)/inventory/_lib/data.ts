@@ -14,7 +14,6 @@ export async function getAllItems(): Promise<Item[]> {
     const itemsSnapshot = await getDocs(itemsCollectionRef);
     const items: Item[] = itemsSnapshot.docs.map((doc) => {
       const docData = doc.data();
-      console.log("This is the doc data", docData);
 
       // console.log("This is the doc id", documentId);
 
