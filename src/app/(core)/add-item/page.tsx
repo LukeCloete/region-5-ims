@@ -161,15 +161,12 @@ export default function Page() {
   }
   const now = new Date(); // Get the current date and time
   const formattedTimestamp = getFormattedTimestamp(now);
-  console.log(formattedTimestamp); // Example: "2025-08-19 16:35:23.456"
 
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden bg-dashboardBackgroundDark px-2 py-4 ">
       {/* <div className="w-full h-full flex-none md:w-64">
         <SideBar />
       </div> */}
-      <button onClick={() => console.log(formattedTimestamp)}>TIME</button>
-
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -319,7 +316,7 @@ export default function Page() {
                           <FormLabel htmlFor="barcode">Barcode</FormLabel>
                           <FormControl>
                             <Input
-                              className="bg-transparent border-gray-700 mt-3 text-white placeholder-gray-500 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              className="bg-transparent border-dashboardBackground mt-3 text-white placeholder-gray-500 rounded-md "
                               placeholder="Barcode of the item"
                               id="barcode"
                               type="number"
@@ -348,7 +345,7 @@ export default function Page() {
                           </FormLabel>
                           <FormControl>
                             <Input
-                              className="bg-transparent border-gray-700 mt-3 text-white placeholder-gray-500 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              className="bg-transparent border-dashboardBackground mt-3 text-white placeholder-gray-500 rounded-md "
                               placeholder="Serial number of the item"
                               id="serial-number"
                               {...field}
@@ -373,11 +370,11 @@ export default function Page() {
                             name="cluster"
                           >
                             <FormControl>
-                              <SelectTrigger className="bg-transparent border-gray-700 mt-3 text-white placeholder-gray-500 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                              <SelectTrigger className="bg-transparent border-dashboardBackground mt-3 text-white rounded-md">
                                 <SelectValue placeholder="Select a cluster" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="bg-gray-700 text-white border-gray-600">
+                            <SelectContent className=" text-white border-dashboardBackground">
                               <SelectItem value="accreditation">
                                 Accreditation
                               </SelectItem>
@@ -428,7 +425,7 @@ export default function Page() {
                           <FormLabel htmlFor="item-name">Item Name</FormLabel>
                           <FormControl>
                             <Input
-                              className="bg-transparent border-gray-700 mt-3 text-white placeholder-gray-500 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              className="bg-transparent border-dashboardBackground mt-3 text-white placeholder-gray-500 "
                               placeholder="Name of the item"
                               id="item-name"
                               {...field}
@@ -450,7 +447,7 @@ export default function Page() {
                           <FormControl>
                             <Input
                               type="number"
-                              className="bg-transparent border-gray-700 mt-3 text-white placeholder-gray-500 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              className="bg-transparent border-dashboardBackground mt-3 text-white placeholder-gray-500 rounded-md "
                               placeholder="Item quantity"
                               id="quantity"
                               {...field}
@@ -479,11 +476,11 @@ export default function Page() {
                             name="category"
                           >
                             <FormControl>
-                              <SelectTrigger className="bg-transparent border-gray-700 mt-3 text-white placeholder-gray-500 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                              <SelectTrigger className="bg-transparent border-dashboardBackground mt-3 text-white  rounded-md ">
                                 <SelectValue placeholder="Select a category" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="bg-gray-700 text-white border-gray-600">
+                            <SelectContent className="border-dashboardBackground text-white border-dashboardBackground">
                               <SelectItem value="home-equipment">
                                 Home Equipment
                               </SelectItem>
@@ -513,7 +510,7 @@ export default function Page() {
                         <FormLabel htmlFor="description">Description</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="bg-transparent min-h-32 border-gray-700 mt-3 text-white placeholder-gray-500 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="bg-transparent min-h-32 border-dashboardBackground mt-3 text-white "
                             placeholder="Add any relevant comments about the item"
                             id="description"
                             {...field}
@@ -538,7 +535,7 @@ export default function Page() {
                           <FormControl>
                             <Input
                               type="date"
-                              className="bg-transparent border-gray-700 mt-3 text-white placeholder-gray-500 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                              className="bg-transparent border-dashboardBackground mt-3 text-white "
                               placeholder="The date when the item was purchased"
                               id="date-of-purchase"
                               // Ensure the value is always a string in 'YYYY-MM-DD' format

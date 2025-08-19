@@ -11,6 +11,7 @@ import {
   getDoc,
   updateDoc,
   Timestamp,
+  serverTimestamp,
 } from "firebase/firestore";
 
 export async function addItem(formData: FormData) {
@@ -31,6 +32,9 @@ export async function addItem(formData: FormData) {
   //   : null;
 
   const barcodeAsNumber = Number(rawFormData.barcode);
+
+  const currentTimestampFromSA = serverTimestamp();
+  console.log("Current Timestamp:", currentTimestampFromSA);
   const itemData = {
     barCode: barcodeAsNumber,
     serialNumber: rawFormData.serialNumber,
@@ -40,10 +44,13 @@ export async function addItem(formData: FormData) {
     quantity: rawFormData.quantity,
     description: rawFormData.description,
     dateOfPurchase: rawFormData.dateOfPurchase,
+    currentTimestamp: currentTimestampFromSA,
   };
 
   console.log("Raw Form Data:", rawFormData);
   await addDoc(collection(db, "items"), itemData);
+
+  // import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
   // // The below is how to get all data of items from the database
   // const docRef = doc(db, "items", "M9OG7VZMXC4rByaAE9Ye");

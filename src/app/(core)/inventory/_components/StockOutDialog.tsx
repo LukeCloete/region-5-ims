@@ -103,7 +103,14 @@ export function StockOutDialog({ item }: { item: Item }) {
                     <FormItem>
                       <FormLabel>Quantity</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} min={1} />
+                        <Input
+                          type="number"
+                          {...field}
+                          min={1}
+                          onChange={(event) => {
+                            field.onChange(event.target.valueAsNumber || ""); // Handle number input, setting to '' if invalid
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -119,6 +126,20 @@ export function StockOutDialog({ item }: { item: Item }) {
                   Cancel
                 </Button>
                 <Button type="submit">Dispense</Button>
+                <button
+                  onClick={() => {
+                    console.log(form.getValues("quantity"));
+                  }}
+                >
+                  Click to view the values of quantity
+                </button>
+                <button
+                  onClick={() => {
+                    console.log(typeof form.getValues("quantity"));
+                  }}
+                >
+                  Click to view data type of quantity
+                </button>
               </DialogFooter>
             </form>
           </Form>
