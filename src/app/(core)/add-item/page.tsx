@@ -47,11 +47,11 @@ import { getErrorMessage } from "@/lib/utils";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  barcode: z.string(),
+  barcode: z.number(),
   serialNumber: z.string(),
   cluster: z.enum([
     "accreditation",
-    "ceremnonies",
+    "ceremonies",
     "security",
     "infrastructure",
     "game-services",
@@ -84,7 +84,7 @@ export default function Page() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      barcode: "",
+      barcode: 0,
       serialNumber: "",
       cluster: "None",
       itemName: "",
@@ -95,32 +95,38 @@ export default function Page() {
     },
   });
 
-  const [dialogBarcode, setDialogBarcode] = useState("");
+  const [dialogBarcode, setDialogBarcode] = useState(0);
+  const [dialogBarcode2nd, setDialogBarcode2nd] = useState(0);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const handleDialogSubmit = () => {
     if (dialogBarcode) {
       // Save to local storage
-      localStorage.setItem("scannedBarcode", dialogBarcode);
+      localStorage.setItem("scannedBarcode", dialogBarcode.toString());
       console.log("Dialog barcode saved:", dialogBarcode);
 
       // Set the barcode field in the main form
-      form.setValue("barcode", dialogBarcode, { shouldValidate: true });
+      // form.setValue("barcode", dialogBarcode, {
+      //   shouldValidate: true,
+      // });
 
       // Close the dialog
       setIsDialogOpen(false);
       // Reset dialog barcode for next scan
-      setDialogBarcode("");
+      // setDialogBarcode(0);
     } else {
       console.log("Dialog barcode is empty.");
       // You might want to show a validation message inside the dialog here
     }
   };
 
+  const submitForBarCode = () => {};
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
 
     const formData = new FormData();
-    formData.append("barcode", values.barcode);
+    formData.append("barcode", values.barcode.toString());
     formData.append("serial-number", values.serialNumber);
     formData.append("cluster", values.cluster);
     formData.append("category", values.category);
@@ -139,11 +145,30 @@ export default function Page() {
     }
   };
 
+  function getFormattedTimestamp(dateObject: Date): string {
+    const year = dateObject.getFullYear();
+    const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
+    const day = dateObject.getDate().toString().padStart(2, "0");
+    const hours = dateObject.getHours().toString().padStart(2, "0");
+    const minutes = dateObject.getMinutes().toString().padStart(2, "0");
+    const seconds = dateObject.getSeconds().toString().padStart(2, "0");
+    const milliseconds = dateObject
+      .getMilliseconds()
+      .toString()
+      .padStart(3, "0");
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+  }
+  const now = new Date(); // Get the current date and time
+  const formattedTimestamp = getFormattedTimestamp(now);
+  console.log(formattedTimestamp); // Example: "2025-08-19 16:35:23.456"
+
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden bg-dashboardBackgroundDark px-2 py-4 ">
       {/* <div className="w-full h-full flex-none md:w-64">
         <SideBar />
       </div> */}
+      <button onClick={() => console.log(formattedTimestamp)}>TIME</button>
 
       <Form {...form}>
         <form
@@ -189,11 +214,13 @@ export default function Page() {
                         <Label htmlFor="barcode">Barcode</Label>
                         <Input
                           className="bg-transparent border-dashboardBackground "
-                          id="barcode"
-                          name="barcode"
+                          id="barcode-dialog"
+                          name="barcode-dialog"
                           type="text"
                           value={dialogBarcode}
-                          onChange={(e) => setDialogBarcode(e.target.value)}
+                          onChange={(e) =>
+                            setDialogBarcode(Number(e.target.value))
+                          }
                         />
                       </div>
                     </div>
@@ -295,7 +322,13 @@ export default function Page() {
                               className="bg-transparent border-gray-700 mt-3 text-white placeholder-gray-500 rounded-md focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                               placeholder="Barcode of the item"
                               id="barcode"
+                              type="number"
                               {...field}
+                              onChange={(event) => {
+                                field.onChange(
+                                  event.target.valueAsNumber || ""
+                                ); // Handle number input, setting to '' if invalid
+                              }}
                             />
                           </FormControl>
                           <FormMessage />
@@ -352,8 +385,8 @@ export default function Page() {
                                 Ceremonies
                               </SelectItem>
                               <SelectItem value="security">Security</SelectItem>
-                              <SelectItem value="infrastracture">
-                                Infrastracture
+                              <SelectItem value="infrastructure">
+                                Infrastructure
                               </SelectItem>
                               <SelectItem value="game-services">
                                 Game Services
@@ -370,9 +403,6 @@ export default function Page() {
                               </SelectItem>
                               <SelectItem value="catering">Catering</SelectItem>
                               <SelectItem value="health">Health</SelectItem>
-                              <SelectItem value="volunteers">
-                                Volunteers
-                              </SelectItem>
                               <SelectItem value="accomodation">
                                 Accomodation
                               </SelectItem>
@@ -536,7 +566,13 @@ export default function Page() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-row ">
-              <Button type="submit" className="bg-projectGreen">
+              <Button
+                type="submit"
+                onClick={() => {
+                  console.log("This also means you submitted");
+                }}
+                className="bg-projectGreen"
+              >
                 Submit
               </Button>
               <Button className="bg-projectRed hover:bg-projectRed">
