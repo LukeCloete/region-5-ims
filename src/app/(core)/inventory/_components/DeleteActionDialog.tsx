@@ -20,6 +20,7 @@ import { Item } from "../_definitions/columns";
  */
 const DeleteConfirmationDialog = ({
   item,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onDelete,
 }: {
   item: Item;
