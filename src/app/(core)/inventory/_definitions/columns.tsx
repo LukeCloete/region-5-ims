@@ -14,7 +14,6 @@ import {
 import { StockOutDialog } from "../_components/StockOutDialog";
 import { Timestamp } from "firebase/firestore";
 import Link from "next/link";
-import { useState } from "react";
 import { deleteItem } from "../_lib/actions";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/utils";
@@ -197,12 +196,11 @@ export const columns: ColumnDef<Item>[] = [
     header: "Actions",
     cell: ({ row }) => {
       const item = row.original;
-      const [showConfirm, setShowConfirm] = useState(false);
-      const [isDeleting, setIsDeleting] = useState(false);
+
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const router = useRouter(); // Initialize the router
 
       const handleDelete = async () => {
-        setIsDeleting(true);
         try {
           const result = await deleteItem(item.id);
           if (result.success) {
@@ -211,11 +209,9 @@ export const columns: ColumnDef<Item>[] = [
           } else {
             toast.error(getErrorMessage(result) || "Failed to delete item.");
           }
-          setShowConfirm(false);
         } catch (e) {
           toast.error(getErrorMessage(e));
         } finally {
-          setIsDeleting(false);
         }
       };
 
