@@ -1,7 +1,6 @@
 "use client";
 import { signOut } from "@/lib/auth";
 import Link from "next/link";
-import { getCurrentUserDetails } from "../app/(core)/add-item/_lib/actions";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
