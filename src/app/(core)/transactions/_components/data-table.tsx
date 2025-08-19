@@ -31,6 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -69,10 +70,10 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter names..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter item IDs..."
+          value={(table.getColumn("itemId")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("itemId")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -144,9 +145,28 @@ export function DataTable<TData, TValue>({
                       key={cell.id}
                       className="text-foreground  text-left focus:bg-foreground/10"
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                      {cell.column.id === "type" ? (
+                        //badge should be orange for stock-out value and blue for stock-in value
+                        <Badge
+                          className={cn(
+                            "px-2 py-1 rounded-xl text-xs font-semibold",
+                            cell.getValue() === "stock-out"
+                              ? "bg-red-700 text-white"
+                              : cell.getValue() === "stock-in"
+                              ? "bg-blue-700 text-white"
+                              : "bg-foreground/10 text-foreground"
+                          )}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </Badge>
+                      ) : (
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
                       )}
                     </TableCell>
                   ))}
