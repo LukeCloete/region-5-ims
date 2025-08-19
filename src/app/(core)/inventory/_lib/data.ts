@@ -27,9 +27,9 @@ export async function getAllItems(): Promise<Item[]> {
       }
 
       // Safely convert Firestore Timestamp to a Date object or null.
-      let dateOfPurchase: Date | null = null;
+      let dateOfPurchase: string | null = "N/A";
       if (docData.dateOfPurchase instanceof Timestamp) {
-        dateOfPurchase = docData.dateOfPurchase.toDate();
+        dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
       }
 
       return {
@@ -41,7 +41,7 @@ export async function getAllItems(): Promise<Item[]> {
         quantity: docData.quantity,
         categoryId: docData.categoryId,
         description: docData.description || "No description",
-        dateOfPurchase: dateOfPurchase,
+        dateOfPurchase: docData.dateOfPurchase,
       } as Item;
     });
 

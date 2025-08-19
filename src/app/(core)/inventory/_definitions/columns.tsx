@@ -13,6 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { StockOutDialog } from "../_components/StockOutDialog";
+import { Timestamp } from "firebase/firestore";
+import Link from "next/link";
 
 // Define the interface for your data.
 export interface Item {
@@ -24,7 +26,7 @@ export interface Item {
   quantity: number;
   categoryId: string;
   description: string;
-  dateOfPurchase: Date;
+  dateOfPurchase: Timestamp;
 }
 
 // Define the columns.
@@ -173,8 +175,16 @@ export const columns: ColumnDef<Item>[] = [
       );
     },
     cell: ({ getValue }) => {
-      const date = new Date(getValue() as string);
-      return date.toLocaleDateString();
+      const dateString = getValue() as Timestamp | null;
+
+      // Check if the date string is valid before creating a Date object.
+      if (!dateString) {
+        return "N/A"; // Or any placeholder you prefer for a missing date.
+      }
+      const date = new Date(dateString.seconds * 1000);
+
+      // Ensure the date is not 'Invalid Date' before formatting.
+      return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleDateString();
     },
   },
   {
@@ -193,7 +203,9 @@ export const columns: ColumnDef<Item>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <StockOutDialog item={item} />
-            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <Link href={`/inventory/edit/${item.id}`}>
+              <DropdownMenuItem>Edit Item</DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       );
