@@ -81,7 +81,7 @@ export default function Page() {
         <p className="font-bold text-foreground text-xl ">Region 5 IMS</p>
       </div>
       <div className="flex items-center justify-center rounded-r-2xl w-full h-full">
-        <div className="w-full h-full flex flex-col bg-white gap-8 items-center justify-center">
+        <div className="w-full h-full flex flex-col gap-8 items-center justify-center bg-dashboardBackgroundDark">
           <div className="flex flex-col items-center justify-center gap-2 w-full">
             <h1 className=" text-2xl text-foreground font-bold">
               Login to your account

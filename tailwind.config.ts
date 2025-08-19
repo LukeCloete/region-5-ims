@@ -53,6 +53,8 @@ const config: Config = {
         // New custom colors from your other project
         dashboardBackground: "var(--dashboard-background)",
         dashboardBackgroundDark: "var(--dashboard-background-dark)",
+        projectRed: "var(--project-red)",
+        projectGreen: "var(--project-green)",
       },
       borderRadius: {
         lg: "var(--radius)",

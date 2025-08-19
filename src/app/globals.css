@@ -43,8 +43,10 @@ body {
     /* Custom variables from your other project */
     --dashboard-background: #333333;
     --dashboard-background-dark: #1b1b1b;
+    --project-red: #d50e39;
+    --project-green: #02764b;
   }
- 
+
   .dark {
     --background: 20 14.3% 4.1%;
     --foreground: 0 0% 95%;

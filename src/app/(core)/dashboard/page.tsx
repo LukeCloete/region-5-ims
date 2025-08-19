@@ -41,8 +41,8 @@ export default function Page() {
           </button>
         </div>
       ) : (
-        <section className="text-left flex items-start justify-start">
-          <h1 className="text-3xl text-primary-foreground font-bold">
+        <section className="text-left flex items-start justify-start  flex justify-center align-center">
+          <h1 className="text-3xl text-primary-foreground font-bold text-white ">
             Welcome, {user.displayName}
           </h1>
         </section>
