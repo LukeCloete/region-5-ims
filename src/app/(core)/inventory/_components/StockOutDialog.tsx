@@ -75,7 +75,7 @@ export function StockOutDialog({ item }: { item: Item }) {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Mark "{item.name}" as Stock Out</DialogTitle>
+            <DialogTitle>Mark &apos;{item.name}&apos; as Stock Out</DialogTitle>
             <DialogDescription>
               Enter the quantity and destination to dispense this item.
             </DialogDescription>

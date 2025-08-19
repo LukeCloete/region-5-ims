@@ -26,11 +26,11 @@ export async function getAllItems(): Promise<Item[]> {
         barcodeValue = 0; // Default to 0 if invalid.
       }
 
-      // Safely convert Firestore Timestamp to a Date object or null.
-      let dateOfPurchase: string | null = "N/A";
-      if (docData.dateOfPurchase instanceof Timestamp) {
-        dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
-      }
+      // // Safely convert Firestore Timestamp to a Date object or null.
+      // let dateOfPurchase: string | null = "N/A";
+      // if (docData.dateOfPurchase instanceof Timestamp) {
+      //   dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
+      // }
 
       return {
         id: doc.id,

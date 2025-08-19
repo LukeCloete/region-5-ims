@@ -23,6 +23,7 @@ export async function getAllTransactions(): Promise<Transaction[]> {
       // Safely convert Firestore Timestamp to a serializable ISO string for 'date'.
       let transactionDate: string | null = null;
       if (docData.date instanceof Timestamp) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         transactionDate = docData.date.toDate().toLocaleDateString();
       }
 

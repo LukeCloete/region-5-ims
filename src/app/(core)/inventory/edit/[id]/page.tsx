@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { doc, getDoc, updateDoc, Timestamp } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { toast } from "sonner";
 import { getErrorMessage } from "@/lib/utils";
@@ -47,6 +47,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const { id } = params;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [item, setItem] = useState<z.infer<typeof formSchema> | null>(null);
 
   // Initialize the form with react-hook-form.
@@ -104,7 +105,6 @@ export default function Page({ params }: { params: { id: string } }) {
   ) => {
     try {
       setLoading(true);
-      const itemDocRef = doc(db, "items", id);
 
       const formData = new FormData();
 
