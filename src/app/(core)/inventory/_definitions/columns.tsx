@@ -14,11 +14,9 @@ import {
 import { StockOutDialog } from "../_components/StockOutDialog";
 import { Timestamp } from "firebase/firestore";
 import Link from "next/link";
-import { deleteItem } from "../_lib/actions";
-import { toast } from "sonner";
-import { getErrorMessage } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import DeleteConfirmationDialog from "../_components/DeleteActionDialog";
+import { useAuthContext } from "@/lib/contexts/AuthContext";
+import StockInConfirmationDialog from "../_components/StockInDialog";
 
 // Define the interface for your data.
 export interface Item {
@@ -34,24 +32,13 @@ export interface Item {
   currentTimestamp: Timestamp;
 }
 
+const ALLOWED_ROLES = ["admin", "superuser"];
 // A dedicated component to handle the cell's interactive logic and hooks.
 const ActionCell = ({ item }: { item: Item }) => {
-  const router = useRouter();
+  const { user } = useAuthContext();
 
-  const handleDelete = async () => {
-    try {
-      const result = await deleteItem(item.id);
-      if (result.success) {
-        toast.success("Item deleted successfully.");
-        router.refresh();
-      } else {
-        toast.error(getErrorMessage(result) || "Failed to delete item.");
-      }
-    } catch (e) {
-      toast.error(getErrorMessage(e));
-    }
-  };
-
+  const canEditOrDelete =
+    typeof user?.role === "string" && ALLOWED_ROLES.includes(user.role);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -62,10 +49,28 @@ const ActionCell = ({ item }: { item: Item }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <StockOutDialog item={item} />
-        <Link href={`/inventory/edit/${item.id}`}>
-          <DropdownMenuItem>Edit Item</DropdownMenuItem>
-        </Link>
-        <DeleteConfirmationDialog item={item} onDelete={handleDelete} />
+        {canEditOrDelete && (
+          <>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
+              <StockInConfirmationDialog item={item} userUid={user.uid} />
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              asChild
+            ></DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link
+                className="w-full px-2  justify-start font-normal"
+                href={`/inventory/edit/${item.id}`}
+              >
+                Edit Item
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
+              <DeleteConfirmationDialog item={item} />
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

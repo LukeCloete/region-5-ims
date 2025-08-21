@@ -101,7 +101,12 @@ export function StockOutDialog({ item }: { item: Item }) {
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>Mark as Stock Out</Button>
+          <Button
+            variant="secondary"
+            className="w-full justify-start font-normal"
+          >
+            Mark as Stock Out
+          </Button>
         </DialogTrigger>
         <DialogContent className="">
           <DialogHeader>

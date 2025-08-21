@@ -3,6 +3,8 @@
 
 import { db } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function addItem(formData: FormData) {
   const rawFormData = {
@@ -33,4 +35,19 @@ export async function addItem(formData: FormData) {
   };
 
   await addDoc(collection(db, "items"), itemData);
+
+  revalidatePath("/inventory");
+  redirect("/inventory");
+
+  // import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+
+  // // The below is how to get all data of items from the database
+  // const docRef = doc(db, "items", "M9OG7VZMXC4rByaAE9Ye");
+  // const docSnap = await getDoc(docRef);
+  // if (docSnap.exists()) {
+  //   console.log("Document data:", docSnap.data());
+  // } else {
+  //   // docSnap.data() will be undefined in this case
+  //   console.log("No such document!");
+  // }
 }

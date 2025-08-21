@@ -83,6 +83,34 @@ export async function markItemAsStockOut(
   redirect("/inventory");
 }
 
+export async function markItemAsStockIn(itemId: string, userId: string) {
+  const itemRef = doc(db, "items", itemId);
+  const transactionsCollectionRef = collection(db, "transactions");
+
+  await runTransaction(db, async (transaction) => {
+    const itemDoc = await transaction.get(itemRef);
+
+    if (!itemDoc.exists()) {
+      throw new Error("Item does not exist!");
+    }
+
+    const currentTimestampFromSA = serverTimestamp();
+
+    // Create a new transaction record.
+    const transactionData = {
+      itemId: itemRef.id,
+      type: "stock-in",
+      userId: userId,
+      currentTimestamp: currentTimestampFromSA,
+    };
+    await addDoc(transactionsCollectionRef, transactionData);
+  });
+
+  revalidatePath("/inventory");
+  revalidatePath("/transactions");
+  redirect("/inventory");
+}
+
 // Define a Zod schema for validation.
 const updateItemSchema = z.object({
   name: z.string().min(1, "Item name is required."),
