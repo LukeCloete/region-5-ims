@@ -39,6 +39,7 @@ const formSchema = z.object({
   quantity: z.number().min(0, "Quantity must be a non-negative number."),
   category: z.string().min(1, "Category is required."),
   itemCondition: z.enum(["Good", "Bad", "Damaged"]),
+  productCode: z.string(),
 });
 
 // The main component for the dynamic edit page.
@@ -176,6 +177,21 @@ export default function Page({ params }: { params: { id: string } }) {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="productCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Code</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="barcode"
