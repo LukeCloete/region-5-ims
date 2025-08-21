@@ -73,6 +73,7 @@ export async function markItemAsStockOut(
       userId: userId,
       date: Timestamp.fromDate(new Date()),
       currentTimestamp: currentTimestampFromSA,
+      productCode: itemDoc.data().productCode,
     };
     await addDoc(transactionsCollectionRef, transactionData);
   });

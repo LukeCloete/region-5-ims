@@ -20,6 +20,7 @@ export interface Transaction {
   category: string;
   serialNumber?: string;
   dateOfPurchase?: Timestamp;
+  productCode: string;
 }
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -80,14 +81,14 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorKey: "itemId",
+    accessorKey: "productCode",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Item ID
+          Product Code
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -144,6 +145,20 @@ export const columns: ColumnDef<Transaction>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Recipient Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "userEmail",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Issued By
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

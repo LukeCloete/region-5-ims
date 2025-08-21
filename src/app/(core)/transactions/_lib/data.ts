@@ -10,6 +10,26 @@ import { Transaction } from "../_definitions/columns";
  */
 export async function getAllTransactions(): Promise<Transaction[]> {
   try {
+    const usersCollectionRef = collection(db, "users");
+    const usersSnapshot = await getDocs(usersCollectionRef);
+
+    let userData = {
+      id: "",
+      name: "",
+      email: "",
+      role: "",
+    };
+
+    usersSnapshot.docs.map((doc) => {
+      const docData = doc.data();
+      userData = {
+        id: doc.id,
+        name: docData.name || "",
+        email: docData.email || "",
+        role: docData.role || "",
+      };
+    });
+
     // Get a reference to the 'transactions' collection.
     const transactionsCollectionRef = collection(db, "transactions");
 
@@ -49,12 +69,37 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         category: docData.category || "N/A",
         serialNumber: docData.serialNumber || "N/A",
         dateOfPurchase: docData.dateOfPurchase,
+        productCode: docData.productCode || "",
         itemName: docData.itemName || "N/A",
         remaining: docData.remaining ?? 0,
+        userEmail: userData.email || "",
       };
     });
 
     return transactions;
+  } catch (error) {
+    console.error("Failed to fetch transactions data:", error);
+    return [];
+  }
+}
+
+export async function getCurrentUserDetails() {
+  try {
+    const usersCollectionRef = collection(db, "users");
+    const usersSnapshot = await getDocs(usersCollectionRef);
+
+    const users = usersSnapshot.docs.map((doc) => {
+      const docData = doc.data();
+
+      return {
+        id: doc.id,
+        name: docData.name || "",
+        email: docData.email || "",
+        role: docData.role || "",
+      };
+    });
+
+    return users;
   } catch (error) {
     console.error("Failed to fetch transactions data:", error);
     return [];
