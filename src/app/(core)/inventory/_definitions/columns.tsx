@@ -30,7 +30,7 @@ export interface Item {
   quantity: number;
   categoryId: string;
   itemCondition: string;
-  dateOfPurchase: Timestamp;
+  currentTimestamp: Timestamp;
 }
 
 // A dedicated component to handle the cell's interactive logic and hooks.
@@ -213,14 +213,14 @@ export const columns: ColumnDef<Item>[] = [
     },
   },
   {
-    accessorKey: "dateOfPurchase",
+    accessorKey: "currentTimestamp",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date of Purchase
+          Date of Upload
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

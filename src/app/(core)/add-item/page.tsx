@@ -96,7 +96,6 @@ export default function Page() {
     if (dialogBarcode) {
       // Save to local storage
       localStorage.setItem("scannedBarcode", dialogBarcode.toString());
-      console.log("Dialog barcode saved:", dialogBarcode);
 
       // Set the barcode field in the main form
       // form.setValue("barcode", dialogBarcode, {
@@ -107,7 +106,6 @@ export default function Page() {
       // Reset dialog barcode for next scan
       // setDialogBarcode(0);
     } else {
-      console.log("Dialog barcode is empty.");
       // You might want to show a validation message inside the dialog here
     }
   };
@@ -121,8 +119,7 @@ export default function Page() {
     formData.append("item-name", values.itemName);
     formData.append("quantity", values.quantity.toString());
     formData.append("item-condition", values.itemCondition);
-    formData.append("date-of-purchase", values.dateOfPurchase.toISOString());
-    toast.info(true ? "Adding item..." : "Adding item...");
+    toast.info("Adding item...");
     try {
       await addItem(formData);
       toast.success(`Added item successfully`);
@@ -134,9 +131,6 @@ export default function Page() {
 
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden bg-dashboardBackgroundDark px-2 py-4 ">
-      {/* <div className="w-full h-full flex-none md:w-64">
-        <SideBar />
-      </div> */}
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -506,55 +500,10 @@ export default function Page() {
                     )}
                   />
                 </div>
-
-                <div className="mt-6 flex">
-                  <div className="w-1/3">
-                    <FormField
-                      control={form.control}
-                      name="dateOfPurchase"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel htmlFor="date-of-purchase">
-                            Date of Purchase (Optional)
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="date"
-                              className="bg-transparent border-dashboardBackground mt-3 text-white "
-                              placeholder="The date when the item was purchased"
-                              id="date-of-purchase"
-                              // Ensure the value is always a string in 'YYYY-MM-DD' format
-                              value={
-                                field.value
-                                  ? field.value instanceof Date
-                                    ? field.value.toISOString().split("T")[0]
-                                    : field.value
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                field.onChange(e.target.value); // type="date" input already provides value as 'YYYY-MM-DD' string
-                              }}
-                              onBlur={field.onBlur} // Keep onBlur from {...field}
-                              name={field.name} // Keep name from {...field}
-                              ref={field.ref} // Keep ref from {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
               </div>
             </CardContent>
             <CardFooter className="flex flex-row ">
-              <Button
-                type="submit"
-                onClick={() => {
-                  console.log("This also means you submitted");
-                }}
-                className="bg-projectGreen"
-              >
+              <Button type="submit" className="bg-projectGreen">
                 Submit
               </Button>
               <Button className="bg-projectRed hover:bg-projectRed">
