@@ -56,6 +56,8 @@ const formSchema = z.object({
     "health",
     "accomodation",
     "safe-guarding",
+    "Technical",
+    "LOC",
     "None",
   ]),
 });
@@ -212,6 +214,8 @@ export function StockOutDialog({ item }: { item: Item }) {
                           <SelectItem value="safe-guarding">
                             Safe Guarding
                           </SelectItem>
+                          <SelectItem value="Technical">Technical</SelectItem>
+                          <SelectItem value="LOC">LOC</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
