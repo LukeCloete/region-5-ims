@@ -67,6 +67,7 @@ export function StockOutDialog({ item }: { item: Item }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       recipientName: "",
+      recipientPhoneNumber: 0,
       quantity: 1,
       cluster: "None",
     },
@@ -139,6 +140,9 @@ export function StockOutDialog({ item }: { item: Item }) {
                           type="number"
                           placeholder="Enter the phone number of the individual receiving the item "
                           {...field}
+                          onChange={(event) => {
+                            field.onChange(event.target.valueAsNumber || ""); // Handle number input, setting to '' if invalid
+                          }}
                         />
                       </FormControl>
                       <FormMessage />
