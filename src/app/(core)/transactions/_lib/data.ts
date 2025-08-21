@@ -10,6 +10,26 @@ import { Transaction } from "../_definitions/columns";
  */
 export async function getAllTransactions(): Promise<Transaction[]> {
   try {
+    const usersCollectionRef = collection(db, "users");
+    const usersSnapshot = await getDocs(usersCollectionRef);
+
+    let userData = {
+      id: "",
+      name: "",
+      email: "",
+      role: "",
+    };
+
+    usersSnapshot.docs.map((doc) => {
+      const docData = doc.data();
+      userData = {
+        id: doc.id,
+        name: docData.name || "",
+        email: docData.email || "",
+        role: docData.role || "",
+      };
+    });
+
     // Get a reference to the 'transactions' collection.
     const transactionsCollectionRef = collection(db, "transactions");
 
@@ -34,8 +54,6 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
       }
-      console.log("below is docData", docData);
-      console.log(docData);
 
       return {
         id: doc.id,
@@ -54,10 +72,34 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         productCode: docData.productCode || "",
         itemName: docData.itemName || "N/A",
         remaining: docData.remaining ?? 0,
+        userEmail: userData.email || "",
       };
     });
 
     return transactions;
+  } catch (error) {
+    console.error("Failed to fetch transactions data:", error);
+    return [];
+  }
+}
+
+export async function getCurrentUserDetails() {
+  try {
+    const usersCollectionRef = collection(db, "users");
+    const usersSnapshot = await getDocs(usersCollectionRef);
+
+    const users = usersSnapshot.docs.map((doc) => {
+      const docData = doc.data();
+
+      return {
+        id: doc.id,
+        name: docData.name || "",
+        email: docData.email || "",
+        role: docData.role || "",
+      };
+    });
+
+    return users;
   } catch (error) {
     console.error("Failed to fetch transactions data:", error);
     return [];
