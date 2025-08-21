@@ -14,9 +14,6 @@ import {
 import { StockOutDialog } from "../_components/StockOutDialog";
 import { Timestamp } from "firebase/firestore";
 import Link from "next/link";
-import { deleteItem, markItemAsStockIn } from "../_lib/actions";
-import { toast } from "sonner";
-import { getErrorMessage } from "@/lib/utils";
 import DeleteConfirmationDialog from "../_components/DeleteActionDialog";
 import { useAuthContext } from "@/lib/contexts/AuthContext";
 import StockInConfirmationDialog from "../_components/StockInDialog";
@@ -39,32 +36,6 @@ const ALLOWED_ROLES = ["admin", "superuser"];
 // A dedicated component to handle the cell's interactive logic and hooks.
 const ActionCell = ({ item }: { item: Item }) => {
   const { user } = useAuthContext();
-
-  const handleDelete = async () => {
-    try {
-      const result = await deleteItem(item.id);
-      if (result.success) {
-        toast.success("Item deleted successfully.");
-      } else {
-        toast.error(getErrorMessage(result) || "Failed to delete item.");
-      }
-    } catch (e) {
-      toast.error(getErrorMessage(e));
-    }
-    const handleStockIn = async () => {
-      if (!user) {
-        toast.error("You must be logged in to perform this action.");
-        return;
-      }
-
-      try {
-        await markItemAsStockIn(item.id, user.uid);
-        toast.success("Item marked as stock-in.");
-      } catch (e) {
-        toast.error(getErrorMessage(e));
-      }
-    };
-  };
 
   const canEditOrDelete =
     typeof user?.role === "string" && ALLOWED_ROLES.includes(user.role);
@@ -94,7 +65,7 @@ const ActionCell = ({ item }: { item: Item }) => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-              <DeleteConfirmationDialog item={item} onDelete={handleDelete} />
+              <DeleteConfirmationDialog item={item} />
             </DropdownMenuItem>
           </>
         )}

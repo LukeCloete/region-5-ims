@@ -5,7 +5,6 @@ import { db } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { markItemAsStockIn } from "../../inventory/_lib/actions";
 
 export async function addItem(formData: FormData) {
   const rawFormData = {

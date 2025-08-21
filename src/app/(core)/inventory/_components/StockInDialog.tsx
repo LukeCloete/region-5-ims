@@ -7,8 +7,6 @@ import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/utils";
 import { markItemAsStockIn } from "../_lib/actions";
 import { Item } from "../_definitions/columns";
-import { useAuthContext } from "@/lib/contexts/AuthContext";
-import { User } from "firebase/auth";
 
 /**
  * A reusable dialog component for confirming the marking of stock-in for an item.
