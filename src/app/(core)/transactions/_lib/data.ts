@@ -34,6 +34,8 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
       }
+      console.log("below is docData", docData);
+      console.log(docData);
 
       return {
         id: doc.id,
@@ -49,6 +51,7 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         category: docData.category || "N/A",
         serialNumber: docData.serialNumber || "N/A",
         dateOfPurchase: docData.dateOfPurchase,
+        productCode: docData.productCode || "",
         itemName: docData.itemName || "N/A",
         remaining: docData.remaining ?? 0,
       };

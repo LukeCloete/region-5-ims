@@ -20,6 +20,7 @@ export interface Transaction {
   category: string;
   serialNumber?: string;
   dateOfPurchase?: Timestamp;
+  productCode: string;
 }
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -80,14 +81,14 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorKey: "itemId",
+    accessorKey: "productCode",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Item ID
+          Product Code
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
