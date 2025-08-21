@@ -32,7 +32,8 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-
+import { useRouter } from "next/navigation";
+import { RefreshCcw } from "lucide-react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -46,6 +47,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -66,6 +68,10 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const handleRefresh = () => {
+    router.refresh();
+  };
+
   return (
     <div>
       <div className="flex items-center py-4">
@@ -77,7 +83,14 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-
+        <Button
+          variant="ghost"
+          className="flex items-center space-x-2"
+          onClick={handleRefresh}
+        >
+          <RefreshCcw className="h-4 w-4" />
+          <span>Refresh</span>
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -114,7 +127,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className="px-4 bg-background text-foreground/70"
+                      className="px-2 bg-background text-foreground/70"
                     >
                       {header.isPlaceholder
                         ? null
@@ -143,7 +156,7 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="text-foreground  text-left focus:bg-foreground/10"
+                      className="text-foreground py-2  text-left focus:bg-foreground/10"
                     >
                       {cell.column.id === "type" ? (
                         //badge should be orange for stock-out value and blue for stock-in value

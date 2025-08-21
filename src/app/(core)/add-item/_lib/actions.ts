@@ -1,7 +1,6 @@
 // every action EXCEPT reading
 "use server";
 
-// Okay I create a function to enter an item into the database
 import { db } from "@/lib/firebase";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
@@ -14,7 +13,6 @@ export async function addItem(formData: FormData) {
     itemName: formData.get("item-name"),
     quantity: formData.get("quantity"),
     itemCondition: formData.get("item-condition"),
-    dateOfPurchase: formData.get("date-of-purchase"),
   };
 
   // Convert match_date to Timestamp
@@ -25,7 +23,7 @@ export async function addItem(formData: FormData) {
   const barcodeAsNumber = Number(rawFormData.barcode);
 
   const currentTimestampFromSA = serverTimestamp();
-  console.log("Current Timestamp:", currentTimestampFromSA);
+
   const itemData = {
     barCode: barcodeAsNumber,
     serialNumber: rawFormData.serialNumber,
@@ -34,7 +32,6 @@ export async function addItem(formData: FormData) {
     itemName: rawFormData.itemName,
     quantity: rawFormData.quantity,
     itemCondition: rawFormData.itemCondition,
-    dateOfPurchase: rawFormData.dateOfPurchase,
     currentTimestamp: currentTimestampFromSA,
   };
 

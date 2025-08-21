@@ -78,6 +78,7 @@ export async function markItemAsStockOut(
   });
 
   revalidatePath("/inventory");
+  revalidatePath("/transactions");
   redirect("/inventory");
 }
 
@@ -91,7 +92,7 @@ const updateItemSchema = z.object({
   cluster: z.string().min(1, "Cluster is required."),
   quantity: z.coerce.number().min(0, "Quantity must be a non-negative number."),
   categoryId: z.string().min(1, "Category is required."),
-  description: z.string().optional(),
+  itemCondition: z.string().min(1, "Item condition is required."),
 });
 
 /**
@@ -133,6 +134,7 @@ export async function updateItem(id: string, formData: FormData) {
 export async function deleteItem(id: string) {
   try {
     await deleteDoc(doc(db, "items", id));
+    revalidatePath("/inventory");
     return { success: true };
   } catch (error) {
     return { success: false, error: getErrorMessage(error) };
