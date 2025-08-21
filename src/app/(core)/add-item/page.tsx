@@ -377,6 +377,10 @@ export default function Page() {
                               <SelectItem value="safe-guarding">
                                 Safe Guarding
                               </SelectItem>
+                              <SelectItem value="Technical">
+                                Technical
+                              </SelectItem>
+                              <SelectItem value="LOC">LOC</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
