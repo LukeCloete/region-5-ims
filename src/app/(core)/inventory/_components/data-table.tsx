@@ -70,13 +70,6 @@ export function DataTable<TData, TValue>({
 */
   return (
     <div>
-      <button
-        onClick={() => {
-          console.log(data);
-        }}
-      >
-        What is this
-      </button>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter barcodes..."
@@ -123,7 +116,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className="px-4 bg-background text-foreground/70"
+                      className="px-2 bg-background text-foreground/70"
                     >
                       {header.isPlaceholder
                         ? null
@@ -152,7 +145,7 @@ export function DataTable<TData, TValue>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="text-foreground  text-left focus:bg-foreground/10"
+                      className="text-foreground  text-left focus:bg-foreground/10 py-1"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
