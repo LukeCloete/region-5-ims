@@ -63,11 +63,11 @@ export async function signUp(
     );
     const user = userCredential.user;
 
-    // Automatically set the new user's role to 'volunteer' in Firestore
+    // Automatically set the new user's role to 'user' in Firestore
     const userRef = doc(db, "users", user.uid);
     await setDoc(userRef, {
       email: user.email,
-      role: "volunteer",
+      role: "user",
     });
 
     const authUser: AuthUser = { ...user, role: "user" };
