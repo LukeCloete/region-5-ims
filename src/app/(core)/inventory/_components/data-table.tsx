@@ -70,13 +70,6 @@ export function DataTable<TData, TValue>({
 */
   return (
     <div>
-      <button
-        onClick={() => {
-          console.log(data);
-        }}
-      >
-        What is this
-      </button>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter barcodes..."

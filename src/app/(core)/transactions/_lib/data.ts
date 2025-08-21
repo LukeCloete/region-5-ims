@@ -34,8 +34,6 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
       }
-      console.log("Below is docData");
-      console.log(docData);
 
       return {
         id: doc.id,

@@ -22,17 +22,6 @@ export interface Transaction {
   dateOfPurchase?: Timestamp;
 }
 
-// function calculateRemaining() {
-//   console.log("This  function calcualtes the remaining");
-//   /* 1. Identify item by item id.
-//      2. See if that value has a stock-out type
-//      3. get the quantity from inventory table -  get the quantity ( from transaction table)
-//      4. This is the remaining value.
-
-//      Maybe this can be done on the database?
-//   */
-// }
-
 export const columns: ColumnDef<Transaction>[] = [
   {
     id: "rowNumber",
@@ -84,7 +73,7 @@ export const columns: ColumnDef<Transaction>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Item name
+          Item Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -146,20 +135,6 @@ export const columns: ColumnDef<Transaction>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "source",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Source/Supplier
-  //         <ArrowUpDown className="ml-2 h-4 w-4" />
-  //       </Button>
-  //     );
-  //   },
-  // },
   {
     accessorKey: "recipientName",
     header: ({ column }) => {
@@ -168,7 +143,7 @@ export const columns: ColumnDef<Transaction>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Recipient name
+          Recipient Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -204,7 +179,7 @@ export const columns: ColumnDef<Transaction>[] = [
   },
 
   {
-    accessorKey: "userId",
+    accessorKey: "serialNumber",
     header: ({ column }) => {
       return (
         <Button
@@ -217,32 +192,7 @@ export const columns: ColumnDef<Transaction>[] = [
       );
     },
   },
-  {
-    accessorKey: "dateOfPurchase",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date of Purchase
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ getValue }) => {
-      const dateString = getValue() as Timestamp | null;
 
-      // Check if the date string is valid before creating a Date object.
-      if (!dateString) {
-        return "N/A"; // Or any placeholder you prefer for a missing date.
-      }
-      const date = new Date(dateString.seconds * 1000);
-
-      // Ensure the date is not 'Invalid Date' before formatting.
-      return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleDateString();
-    },
-  },
   {
     accessorKey: "date",
     header: ({ column }) => {
@@ -251,7 +201,7 @@ export const columns: ColumnDef<Transaction>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date
+          Date of Upload
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

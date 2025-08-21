@@ -42,7 +42,6 @@ import { getAllTransactions } from "./_lib/data";
 
 export default async function TransactionsPage() {
   const data = await getAllTransactions();
-  console.log("Transactions Data:", data);
 
   return (
     <div className="border-2 border-foreground/20 rounded-xl p-4 gap-4 justify-start items-start w-full">
