@@ -123,6 +123,7 @@ export async function updateItem(id: string, formData: FormData) {
 export async function deleteItem(id: string) {
   try {
     await deleteDoc(doc(db, "items", id));
+    revalidatePath("/inventory");
     return { success: true };
   } catch (error) {
     return { success: false, error: getErrorMessage(error) };
