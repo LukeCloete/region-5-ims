@@ -86,7 +86,7 @@ const updateItemSchema = z.object({
   cluster: z.string().min(1, "Cluster is required."),
   quantity: z.coerce.number().min(0, "Quantity must be a non-negative number."),
   categoryId: z.string().min(1, "Category is required."),
-  description: z.string().optional(),
+  itemCondition: z.string().min(1, "Item condition is required."),
 });
 
 /**
