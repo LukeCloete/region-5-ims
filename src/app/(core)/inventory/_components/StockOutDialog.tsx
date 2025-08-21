@@ -39,7 +39,8 @@ import { markItemAsStockOut } from "../_lib/actions";
 
 // Define the form schema for validation
 const formSchema = z.object({
-  destination: z.string().min(1, "Destination is required."),
+  recipientName: z.string().min(1, "Recipient name is required."),
+  recipientPhoneNumber: z.number().min(1, "Recipient number is required."),
   quantity: z.number().min(1, "Quantity must be at least 1."),
   cluster: z.enum([
     "accreditation",
@@ -65,7 +66,8 @@ export function StockOutDialog({ item }: { item: Item }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      destination: "",
+      recipientName: "",
+      recipientPhoneNumber: 0,
       quantity: 1,
       cluster: "None",
     },
@@ -82,7 +84,8 @@ export function StockOutDialog({ item }: { item: Item }) {
         item.id,
         user.uid,
         values.quantity,
-        values.destination
+        values.recipientName,
+        values.recipientPhoneNumber
       );
       toast.success("Item successfully stocked out!");
       setOpen(false);
@@ -101,7 +104,8 @@ export function StockOutDialog({ item }: { item: Item }) {
           <DialogHeader>
             <DialogTitle>Mark &apos;{item.name}&apos; as Stock Out</DialogTitle>
             <DialogDescription>
-              Enter the quantity and destination to dispense this item.
+              Enter the recipient name, phone number, cluster and item quanitity
+              to dispense this item.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -109,17 +113,43 @@ export function StockOutDialog({ item }: { item: Item }) {
               <div className="grid gap-4 py-4">
                 <FormField
                   control={form.control}
-                  name="destination"
+                  name="recipientName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Destination</FormLabel>
+                      <FormLabel>Recipient name</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Department A" {...field} />
+                        <Input
+                          placeholder="Enter the name of the individual receiving the item"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="recipientPhoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Recipient phone number</FormLabel>
+                      <FormControl>
+                        <Input
+                          min={1}
+                          type="number"
+                          placeholder="Enter the phone number of the individual receiving the item "
+                          {...field}
+                          onChange={(event) => {
+                            field.onChange(event.target.valueAsNumber || ""); // Handle number input, setting to '' if invalid
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="quantity"
