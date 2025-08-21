@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { use, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -41,6 +41,7 @@ import { Input } from "@/components/ui/input";
 import { addItem } from "./_lib/actions";
 import { getErrorMessage } from "@/lib/utils";
 import { toast } from "sonner";
+import { useAuthContext } from "@/lib/contexts/AuthContext";
 
 const formSchema = z.object({
   barcode: z.number(),
@@ -78,6 +79,7 @@ const formSchema = z.object({
 });
 
 export default function Page() {
+  const { user } = useAuthContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -114,6 +116,10 @@ export default function Page() {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (!user) {
+      toast.error("You must be logged in to perform this action.");
+      return;
+    }
     const formData = new FormData();
     formData.append("barcode", values.barcode.toString());
     formData.append("serial-number", values.serialNumber);
@@ -123,6 +129,7 @@ export default function Page() {
     formData.append("quantity", values.quantity.toString());
     formData.append("item-condition", values.itemCondition);
     formData.append("productCode", values.productCode);
+    formData.append("userId", user.uid);
     toast.info("Adding item...");
     try {
       await addItem(formData);

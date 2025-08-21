@@ -57,6 +57,7 @@ export async function markItemAsStockOut(
 
     const currentTimestampFromSA = serverTimestamp();
 
+    const newTransactionRef = doc(transactionsCollectionRef);
     // Create a new transaction record.
     const transactionData = {
       barcode: itemDoc.data().barCode,
@@ -75,7 +76,7 @@ export async function markItemAsStockOut(
       currentTimestamp: currentTimestampFromSA,
       productCode: itemDoc.data().productCode,
     };
-    await addDoc(transactionsCollectionRef, transactionData);
+    transaction.set(newTransactionRef, transactionData);
   });
 
   revalidatePath("/inventory");
@@ -107,7 +108,6 @@ export async function markItemAsStockIn(itemId: string, userId: string) {
   });
 
   revalidatePath("/inventory");
-  revalidatePath("/transactions");
   redirect("/inventory");
 }
 

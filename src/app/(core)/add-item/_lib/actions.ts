@@ -16,6 +16,7 @@ export async function addItem(formData: FormData) {
     quantity: formData.get("quantity"),
     itemCondition: formData.get("item-condition"),
     productCode: formData.get("productCode"),
+    userId: formData.get("userId"),
   };
 
   const barcodeAsNumber = Number(rawFormData.barcode);
@@ -32,9 +33,25 @@ export async function addItem(formData: FormData) {
     itemCondition: rawFormData.itemCondition,
     currentTimestamp: currentTimestampFromSA,
     productCode: rawFormData.productCode,
+    userId: rawFormData.userId,
   };
 
-  await addDoc(collection(db, "items"), itemData);
+  const newItemRef = await addDoc(collection(db, "items"), itemData);
+
+  const transactionData = {
+    itemId: newItemRef.id,
+    type: "stock-in",
+    userId: itemData.userId,
+    serialNumber: itemData.serialNumber,
+    cluster: itemData.cluster,
+    category: itemData.category,
+    itemName: itemData.itemName,
+    quantity: itemData.quantity,
+    itemCondition: itemData.itemCondition,
+    currentTimestamp: currentTimestampFromSA,
+    productCode: itemData.productCode,
+  };
+  await addDoc(collection(db, "transactions"), transactionData);
 
   revalidatePath("/inventory");
   redirect("/inventory");
