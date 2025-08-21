@@ -452,9 +452,9 @@ export default function Page() {
                                 <SelectValue placeholder="Select a category" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="border-dashboardBackground text-white border-dashboardBackground">
+                            <SelectContent className="border-dashboardBackground text-white">
                               <SelectItem value="home-equipment">
-                                Home Equipment
+                                Good
                               </SelectItem>
                               <SelectItem value="branding">Branding</SelectItem>
                               <SelectItem value="gadgets">Gadgets</SelectItem>
