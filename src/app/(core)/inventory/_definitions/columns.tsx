@@ -12,6 +12,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { StockOutDialog } from "../_components/StockOutDialog";
+import { Timestamp } from "firebase/firestore";
+import Link from "next/link";
+import { deleteItem } from "../_lib/actions";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import DeleteConfirmationDialog from "../_components/DeleteActionDialog";
 
 // Define the interface for your data.
 export interface Item {
@@ -23,7 +30,7 @@ export interface Item {
   quantity: number;
   categoryId: string;
   description: string;
-  dateOfPurchase: Date;
+  dateOfPurchase: Timestamp;
 }
 
 // Define the columns.
@@ -172,8 +179,16 @@ export const columns: ColumnDef<Item>[] = [
       );
     },
     cell: ({ getValue }) => {
-      const date = new Date(getValue() as string);
-      return date.toLocaleDateString();
+      const dateString = getValue() as Timestamp | null;
+
+      // Check if the date string is valid before creating a Date object.
+      if (!dateString) {
+        return "N/A"; // Or any placeholder you prefer for a missing date.
+      }
+      const date = new Date(dateString.seconds * 1000);
+
+      // Ensure the date is not 'Invalid Date' before formatting.
+      return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleDateString();
     },
   },
   {
@@ -181,6 +196,24 @@ export const columns: ColumnDef<Item>[] = [
     header: "Actions",
     cell: ({ row }) => {
       const item = row.original;
+
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const router = useRouter(); // Initialize the router
+
+      const handleDelete = async () => {
+        try {
+          const result = await deleteItem(item.id);
+          if (result.success) {
+            toast.success("Item deleted successfully.");
+            router.refresh(); // Refresh the current page to update the table
+          } else {
+            toast.error(getErrorMessage(result) || "Failed to delete item.");
+          }
+        } catch (e) {
+          toast.error(getErrorMessage(e));
+        } finally {
+        }
+      };
 
       return (
         <DropdownMenu>
@@ -192,7 +225,13 @@ export const columns: ColumnDef<Item>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <StockOutDialog item={item} />
-            <DropdownMenuItem>View Details</DropdownMenuItem>
+            <Link href={`/inventory/edit/${item.id}`}>
+              <DropdownMenuItem>Edit Item</DropdownMenuItem>
+            </Link>
+            <DeleteConfirmationDialog
+              item={row.original}
+              onDelete={handleDelete}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       );

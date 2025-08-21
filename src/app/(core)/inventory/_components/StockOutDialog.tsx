@@ -14,6 +14,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -34,6 +41,22 @@ import { markItemAsStockOut } from "../_lib/actions";
 const formSchema = z.object({
   destination: z.string().min(1, "Destination is required."),
   quantity: z.number().min(1, "Quantity must be at least 1."),
+  cluster: z.enum([
+    "accreditation",
+    "ceremonies",
+    "security",
+    "infrastructure",
+    "game-services",
+    "transport",
+    "protocol",
+    "marketing",
+    "games-village",
+    "catering",
+    "health",
+    "accomodation",
+    "safe-guarding",
+    "None",
+  ]),
 });
 
 export function StockOutDialog({ item }: { item: Item }) {
@@ -44,6 +67,7 @@ export function StockOutDialog({ item }: { item: Item }) {
     defaultValues: {
       destination: "",
       quantity: 1,
+      cluster: "None",
     },
   });
 
@@ -73,9 +97,9 @@ export function StockOutDialog({ item }: { item: Item }) {
         <DialogTrigger asChild>
           <Button>Mark as Stock Out</Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="">
           <DialogHeader>
-            <DialogTitle>Mark "{item.name}" as Stock Out</DialogTitle>
+            <DialogTitle>Mark &apos;{item.name}&apos; as Stock Out</DialogTitle>
             <DialogDescription>
               Enter the quantity and destination to dispense this item.
             </DialogDescription>
@@ -116,8 +140,57 @@ export function StockOutDialog({ item }: { item: Item }) {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="cluster"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="cluster">Cluster</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        name="cluster"
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-transparent border-dashboardBackground mt-3 text-white rounded-md">
+                            <SelectValue placeholder="Select a cluster" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className=" text-white border-dashboardBackground">
+                          <SelectItem value="accreditation">
+                            Accreditation
+                          </SelectItem>
+                          <SelectItem value="ceremonies">Ceremonies</SelectItem>
+                          <SelectItem value="security">Security</SelectItem>
+                          <SelectItem value="infrastructure">
+                            Infrastructure
+                          </SelectItem>
+                          <SelectItem value="game-services">
+                            Game Services
+                          </SelectItem>
+                          <SelectItem value="transport">Transport</SelectItem>
+                          <SelectItem value="protocol">Protocol</SelectItem>
+                          <SelectItem value="marketing">Marketing</SelectItem>
+                          <SelectItem value="games-village">
+                            Games Village
+                          </SelectItem>
+                          <SelectItem value="catering">Catering</SelectItem>
+                          <SelectItem value="health">Health</SelectItem>
+                          <SelectItem value="accomodation">
+                            Accomodation
+                          </SelectItem>
+                          <SelectItem value="safe-guarding">
+                            Safe Guarding
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <DialogFooter>
+              <DialogFooter className="">
+                <Button type="submit">Dispense</Button>
                 <Button
                   type="button"
                   variant="outline"
@@ -125,21 +198,6 @@ export function StockOutDialog({ item }: { item: Item }) {
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Dispense</Button>
-                <button
-                  onClick={() => {
-                    console.log(form.getValues("quantity"));
-                  }}
-                >
-                  Click to view the values of quantity
-                </button>
-                <button
-                  onClick={() => {
-                    console.log(typeof form.getValues("quantity"));
-                  }}
-                >
-                  Click to view data type of quantity
-                </button>
               </DialogFooter>
             </form>
           </Form>

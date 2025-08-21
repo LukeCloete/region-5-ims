@@ -7,7 +7,7 @@ import React from "react";
 export default function Layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const { user, loading } = useAuthContext();
+  const { user } = useAuthContext();
   return (
     <div className="flex h-screen flex-col md:flex-row overflow-hidden bg-dashboardBackgroundDark px-2 py-4 ">
       <div className="w-full h-full flex-none md:w-64">

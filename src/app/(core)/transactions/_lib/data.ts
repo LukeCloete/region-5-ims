@@ -23,12 +23,15 @@ export async function getAllTransactions(): Promise<Transaction[]> {
       // Safely convert Firestore Timestamp to a serializable ISO string for 'date'.
       let transactionDate: string | null = null;
       if (docData.date instanceof Timestamp) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         transactionDate = docData.date.toDate().toLocaleDateString();
       }
 
       // Safely convert the 'dateOfPurchase' field if it exists and is a Timestamp.
-      let dateOfPurchase: string | null = "todfay";
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      let dateOfPurchase: string | null = "N/A";
       if (docData.dateOfPurchase instanceof Timestamp) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
       }
 
@@ -46,6 +49,9 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         category: docData.category || "N/A",
         serialNumber: docData.serialNumber || "N/A",
         dateOfPurchase: docData.dateOfPurchase,
+        ["item-name"]: docData["item-name"] || "N/A",
+        itemName: docData["item-name"] || "N/A",
+        remaining: docData.remaining ?? 0,
       };
     });
 
