@@ -9,12 +9,16 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { StockOutDialog } from "../_components/StockOutDialog";
 import { Timestamp } from "firebase/firestore";
 import Link from "next/link";
+import { deleteItem } from "../_lib/actions";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import DeleteConfirmationDialog from "../_components/DeleteActionDialog";
 
 // Define the interface for your data.
 export interface Item {
@@ -193,6 +197,24 @@ export const columns: ColumnDef<Item>[] = [
     cell: ({ row }) => {
       const item = row.original;
 
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const router = useRouter(); // Initialize the router
+
+      const handleDelete = async () => {
+        try {
+          const result = await deleteItem(item.id);
+          if (result.success) {
+            toast.success("Item deleted successfully.");
+            router.refresh(); // Refresh the current page to update the table
+          } else {
+            toast.error(getErrorMessage(result) || "Failed to delete item.");
+          }
+        } catch (e) {
+          toast.error(getErrorMessage(e));
+        } finally {
+        }
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -206,6 +228,10 @@ export const columns: ColumnDef<Item>[] = [
             <Link href={`/inventory/edit/${item.id}`}>
               <DropdownMenuItem>Edit Item</DropdownMenuItem>
             </Link>
+            <DeleteConfirmationDialog
+              item={row.original}
+              onDelete={handleDelete}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       );

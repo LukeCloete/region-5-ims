@@ -4,8 +4,10 @@ import { z } from "zod";
 import { db } from "@/lib/firebase";
 import {
   collection,
+  deleteDoc,
   doc,
   runTransaction,
+  serverTimestamp,
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -50,6 +52,8 @@ export async function markItemAsStockOut(
     // Update the item's quantity.
     transaction.update(itemRef, { quantity: newQuantity });
 
+    const currentTimestampFromSA = serverTimestamp();
+
     // Create a new transaction record.
     const transactionData = {
       itemId: itemRef.id,
@@ -58,6 +62,7 @@ export async function markItemAsStockOut(
       type: "stock-out",
       userId: userId,
       date: Timestamp.fromDate(new Date()),
+      currentTimestamp: currentTimestampFromSA,
     };
     await addDoc(transactionsCollectionRef, transactionData);
   });
@@ -113,4 +118,13 @@ export async function updateItem(id: string, formData: FormData) {
 
   // Redirect the user back to the inventory page.
   redirect("/dashboard/inventory");
+}
+
+export async function deleteItem(id: string) {
+  try {
+    await deleteDoc(doc(db, "items", id));
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error) };
+  }
 }

@@ -43,6 +43,8 @@ export async function signIn(
 
     // If no role is found, treat it as an error
     return { user: null, error: "User role not found." };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return { user: null, error: error.message };
   }
@@ -70,6 +72,7 @@ export async function signUp(
 
     const authUser: AuthUser = { ...user, role: "volunteer" };
     return { user: authUser, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return { user: null, error: error.message };
   }

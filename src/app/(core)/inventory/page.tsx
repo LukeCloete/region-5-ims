@@ -1,5 +1,5 @@
 import { DataTable } from "./_components/data-table";
-import { columns, Item } from "./_definitions/columns";
+import { columns } from "./_definitions/columns";
 import { getAllItems } from "./_lib/data";
 
 // async function getData(): Promise<Item[]> {
@@ -133,6 +133,8 @@ import { getAllItems } from "./_lib/data";
 
 export default async function page() {
   const data = await getAllItems();
+  // console.log("This is from the page server component of inventory");
+  // console.log(data);
   return (
     <div className="border-2 border-foreground/20 rounded-xl  p-4 gap-4 justify-start items-start w-full">
       <h1 className="py-2 w-full border-b-[1px] border-b-foreground/20 text-foreground font-bold text-2xl">
