@@ -8,10 +8,11 @@ import { Timestamp } from "firebase/firestore";
 
 export interface Transaction {
   itemId: string;
+  itemName: string;
   quantity: number;
+  remaining: number;
   source: string;
   barcode?: string;
-  destination: string;
   type: "stock-in" | "stock-out";
   userId: string;
   date: Timestamp;
@@ -19,6 +20,7 @@ export interface Transaction {
   category: string;
   serialNumber?: string;
   dateOfPurchase?: Timestamp;
+  productCode: string;
 }
 
 export const columns: ColumnDef<Transaction>[] = [
@@ -65,14 +67,28 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorKey: "itemId",
+    accessorKey: "itemName",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Item ID
+          Item Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "productCode",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Product Code
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -100,35 +116,49 @@ export const columns: ColumnDef<Transaction>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Quantity
+          Quantity Issued
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "source",
+    accessorKey: "remaining",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Source/Supplier
+          Remaining
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "destination",
+    accessorKey: "recipientName",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Destination
+          Recipient Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: "userEmail",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Issued By
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -162,6 +192,7 @@ export const columns: ColumnDef<Transaction>[] = [
       );
     },
   },
+
   {
     accessorKey: "serialNumber",
     header: ({ column }) => {
@@ -176,46 +207,7 @@ export const columns: ColumnDef<Transaction>[] = [
       );
     },
   },
-  {
-    accessorKey: "userId",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Serial Number
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "dateOfPurchase",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date of Purchase
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ getValue }) => {
-      const dateString = getValue() as Timestamp | null;
 
-      // Check if the date string is valid before creating a Date object.
-      if (!dateString) {
-        return "N/A"; // Or any placeholder you prefer for a missing date.
-      }
-      const date = new Date(dateString.seconds * 1000);
-
-      // Ensure the date is not 'Invalid Date' before formatting.
-      return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleDateString();
-    },
-  },
   {
     accessorKey: "date",
     header: ({ column }) => {
@@ -224,7 +216,7 @@ export const columns: ColumnDef<Transaction>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Date
+          Date of Upload
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

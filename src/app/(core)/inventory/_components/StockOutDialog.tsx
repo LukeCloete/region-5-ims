@@ -14,6 +14,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -32,8 +39,27 @@ import { markItemAsStockOut } from "../_lib/actions";
 
 // Define the form schema for validation
 const formSchema = z.object({
-  destination: z.string().min(1, "Destination is required."),
+  recipientName: z.string().min(1, "Recipient name is required."),
+  recipientPhoneNumber: z.number().min(1, "Recipient number is required."),
   quantity: z.number().min(1, "Quantity must be at least 1."),
+  cluster: z.enum([
+    "accreditation",
+    "ceremonies",
+    "security",
+    "infrastructure",
+    "game-services",
+    "transport",
+    "protocol",
+    "marketing",
+    "games-village",
+    "catering",
+    "health",
+    "accomodation",
+    "safe-guarding",
+    "Technical",
+    "LOC",
+    "None",
+  ]),
 });
 
 export function StockOutDialog({ item }: { item: Item }) {
@@ -42,8 +68,10 @@ export function StockOutDialog({ item }: { item: Item }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      destination: "",
+      recipientName: "",
+      recipientPhoneNumber: 0,
       quantity: 1,
+      cluster: "None",
     },
   });
 
@@ -58,7 +86,9 @@ export function StockOutDialog({ item }: { item: Item }) {
         item.id,
         user.uid,
         values.quantity,
-        values.destination
+        values.recipientName,
+        values.recipientPhoneNumber,
+        values.cluster
       );
       toast.success("Item successfully stocked out!");
       setOpen(false);
@@ -71,13 +101,19 @@ export function StockOutDialog({ item }: { item: Item }) {
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>Mark as Stock Out</Button>
+          <Button
+            variant="secondary"
+            className="w-full justify-start font-normal"
+          >
+            Mark as Stock Out
+          </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="">
           <DialogHeader>
-            <DialogTitle>Mark "{item.name}" as Stock Out</DialogTitle>
+            <DialogTitle>Mark &apos;{item.name}&apos; as Stock Out</DialogTitle>
             <DialogDescription>
-              Enter the quantity and destination to dispense this item.
+              Enter the recipient name, phone number, cluster and item quanitity
+              to dispense this item.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -85,17 +121,43 @@ export function StockOutDialog({ item }: { item: Item }) {
               <div className="grid gap-4 py-4">
                 <FormField
                   control={form.control}
-                  name="destination"
+                  name="recipientName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Destination</FormLabel>
+                      <FormLabel>Recipient name</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Department A" {...field} />
+                        <Input
+                          placeholder="Enter the name of the individual receiving the item"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                <FormField
+                  control={form.control}
+                  name="recipientPhoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Recipient phone number</FormLabel>
+                      <FormControl>
+                        <Input
+                          min={1}
+                          type="number"
+                          placeholder="Enter the phone number of the individual receiving the item "
+                          {...field}
+                          onChange={(event) => {
+                            field.onChange(event.target.valueAsNumber || ""); // Handle number input, setting to '' if invalid
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="quantity"
@@ -116,8 +178,59 @@ export function StockOutDialog({ item }: { item: Item }) {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="cluster"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel htmlFor="cluster">Cluster</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        name="cluster"
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-transparent border-dashboardBackground mt-3 text-white rounded-md">
+                            <SelectValue placeholder="Select a cluster" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className=" text-white border-dashboardBackground">
+                          <SelectItem value="accreditation">
+                            Accreditation
+                          </SelectItem>
+                          <SelectItem value="ceremonies">Ceremonies</SelectItem>
+                          <SelectItem value="security">Security</SelectItem>
+                          <SelectItem value="infrastructure">
+                            Infrastructure
+                          </SelectItem>
+                          <SelectItem value="game-services">
+                            Game Services
+                          </SelectItem>
+                          <SelectItem value="transport">Transport</SelectItem>
+                          <SelectItem value="protocol">Protocol</SelectItem>
+                          <SelectItem value="marketing">Marketing</SelectItem>
+                          <SelectItem value="games-village">
+                            Games Village
+                          </SelectItem>
+                          <SelectItem value="catering">Catering</SelectItem>
+                          <SelectItem value="health">Health</SelectItem>
+                          <SelectItem value="accomodation">
+                            Accomodation
+                          </SelectItem>
+                          <SelectItem value="safe-guarding">
+                            Safe Guarding
+                          </SelectItem>
+                          <SelectItem value="Technical">Technical</SelectItem>
+                          <SelectItem value="LOC">LOC</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <DialogFooter>
+              <DialogFooter className="">
+                <Button type="submit">Dispense</Button>
                 <Button
                   type="button"
                   variant="outline"
@@ -125,21 +238,6 @@ export function StockOutDialog({ item }: { item: Item }) {
                 >
                   Cancel
                 </Button>
-                <Button type="submit">Dispense</Button>
-                <button
-                  onClick={() => {
-                    console.log(form.getValues("quantity"));
-                  }}
-                >
-                  Click to view the values of quantity
-                </button>
-                <button
-                  onClick={() => {
-                    console.log(typeof form.getValues("quantity"));
-                  }}
-                >
-                  Click to view data type of quantity
-                </button>
               </DialogFooter>
             </form>
           </Form>

@@ -13,9 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   ArrowLeftRight,
-  BarChart3,
   ClipboardCopy,
-  ClipboardPaste,
   Grid2X2,
   User,
   Warehouse,

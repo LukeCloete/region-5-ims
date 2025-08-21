@@ -1,5 +1,5 @@
 import { DataTable } from "./_components/data-table";
-import { columns, Transaction } from "./_definitions/columns";
+import { columns } from "./_definitions/columns";
 import { getAllTransactions } from "./_lib/data";
 
 // async function getData(): Promise<Transaction[]> {
@@ -42,6 +42,7 @@ import { getAllTransactions } from "./_lib/data";
 
 export default async function TransactionsPage() {
   const data = await getAllTransactions();
+  console.log(data);
 
   return (
     <div className="border-2 border-foreground/20 rounded-xl p-4 gap-4 justify-start items-start w-full">

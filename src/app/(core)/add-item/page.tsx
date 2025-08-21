@@ -1,7 +1,6 @@
 "use client";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
@@ -42,6 +41,7 @@ import { Input } from "@/components/ui/input";
 import { addItem } from "./_lib/actions";
 import { getErrorMessage } from "@/lib/utils";
 import { toast } from "sonner";
+import { useAuthContext } from "@/lib/contexts/AuthContext";
 
 const formSchema = z.object({
   barcode: z.number(),
@@ -70,14 +70,16 @@ const formSchema = z.object({
     "gadgets",
     "it-networking",
     "stationery",
+    "electronics",
     "None",
   ]),
-  description: z.string(),
+  itemCondition: z.enum(["Good", "Bad", "Damaged", ""]),
   dateOfPurchase: z.date(),
+  productCode: z.string(),
 });
 
 export default function Page() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuthContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -87,20 +89,18 @@ export default function Page() {
       itemName: "",
       quantity: 0,
       category: "None",
-      description: "",
+      itemCondition: "",
       dateOfPurchase: new Date(),
+      productCode: "",
     },
   });
 
   const [dialogBarcode, setDialogBarcode] = useState(0);
-  const [dialogBarcode2nd, setDialogBarcode2nd] = useState(0);
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const handleDialogSubmit = () => {
     if (dialogBarcode) {
       // Save to local storage
       localStorage.setItem("scannedBarcode", dialogBarcode.toString());
-      console.log("Dialog barcode saved:", dialogBarcode);
 
       // Set the barcode field in the main form
       // form.setValue("barcode", dialogBarcode, {
@@ -108,20 +108,18 @@ export default function Page() {
       // });
 
       // Close the dialog
-      setIsDialogOpen(false);
       // Reset dialog barcode for next scan
       // setDialogBarcode(0);
     } else {
-      console.log("Dialog barcode is empty.");
       // You might want to show a validation message inside the dialog here
     }
   };
 
-  const submitForBarCode = () => {};
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsSubmitting(true);
-
+    if (!user) {
+      toast.error("You must be logged in to perform this action.");
+      return;
+    }
     const formData = new FormData();
     formData.append("barcode", values.barcode.toString());
     formData.append("serial-number", values.serialNumber);
@@ -129,46 +127,23 @@ export default function Page() {
     formData.append("category", values.category);
     formData.append("item-name", values.itemName);
     formData.append("quantity", values.quantity.toString());
-    formData.append("description", values.description);
-    formData.append("date-of-purchase", values.dateOfPurchase.toISOString());
-    toast.info(true ? "Adding item..." : "Adding item...");
+    formData.append("item-condition", values.itemCondition);
+    formData.append("productCode", values.productCode);
+    formData.append("userId", user.uid);
+    toast.info("Adding item...");
     try {
       await addItem(formData);
       toast.success(`Added item successfully`);
     } catch (error) {
       toast.error(getErrorMessage(error));
     } finally {
-      setIsSubmitting(false);
     }
   };
 
-  function getFormattedTimestamp(dateObject: Date): string {
-    const year = dateObject.getFullYear();
-    const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
-    const day = dateObject.getDate().toString().padStart(2, "0");
-    const hours = dateObject.getHours().toString().padStart(2, "0");
-    const minutes = dateObject.getMinutes().toString().padStart(2, "0");
-    const seconds = dateObject.getSeconds().toString().padStart(2, "0");
-    const milliseconds = dateObject
-      .getMilliseconds()
-      .toString()
-      .padStart(3, "0");
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
-  }
-  const now = new Date(); // Get the current date and time
-  const formattedTimestamp = getFormattedTimestamp(now);
-
   return (
-    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden bg-dashboardBackgroundDark px-2 py-4 ">
-      {/* <div className="w-full h-full flex-none md:w-64">
-        <SideBar />
-      </div> */}
+    <div className="flex flex-col md:flex-row md:overflow-hidden bg-dashboardBackgroundDark px-2 py-4 ">
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full h-screen"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           {/* Add / Scan item */}
           <Card className="bg-dashboardBackgroundDark border-dashboardBackground">
             <CardHeader>
@@ -183,7 +158,8 @@ export default function Page() {
                 Use a barcode scanner or continue with manual form entry below
               </CardTitle>
               <CardDescription className="text-white">
-                Click 'Scan' to add an item if you have a barcode scanner
+                Click &lsquo;Scan&rsquo; to add an item if you have a barcode
+                scanner
               </CardDescription>
 
               <Dialog>
@@ -231,75 +207,6 @@ export default function Page() {
                   </DialogContent>
                 </div>
               </Dialog>
-
-              {/* <Dialog>
-              <form>
-                <DialogTrigger asChild>
-                  <Button className="w-1/6 bg-projectGreen ">2ND DIALOG</Button>
-                </DialogTrigger>
-                <DialogContent className="bg-dashboardBackgroundDark border-dashboardBackground text-white sm:max-w-[576px] ">
-                  <DialogHeader>
-                    <div className="mt-3">
-                      <DialogTitle>This item already exists</DialogTitle>
-                      <DialogDescription className="text-white">
-                        Thebarcode you entered is assigned to an existing item.
-                      </DialogDescription>
-                    </div>
-                    <div className="mt-3">
-                      <DialogTitle className="mt-3">Existing item:</DialogTitle>
-                      <DialogDescription className="text-white">
-                        <div className="mt-2">
-                          <p>Barcode Number:</p>
-                        </div>
-                        <div>
-                          <p>Category:</p>
-                        </div>
-                        <div>
-                          <p>Cluster:</p>
-                        </div>
-                      </DialogDescription>
-                    </div>
-                  </DialogHeader>
-                  <div className="grid gap-4 mb-6">
-                    <DialogTitle className="mt-3">
-                      Add quantity of scanned item:
-                    </DialogTitle>
-                    <div className="grid gap-3 mt-4">
-                      <Label htmlFor="quantity">Quantity</Label>
-                      <Input
-                        className="bg-transparent border-dashboardBackground "
-                        id="quantity"
-                        name="quantity"
-                      />
-                    </div>
-                    <DialogTitle className="mt-3">Change Cluster:</DialogTitle>
-                    <div className="grid gap-3 mt-4">
-                      <Label htmlFor="Cluster">Cluster</Label>
-                      <Select>
-                        <SelectTrigger
-                          className="bg-transparent border-dashboardBackground mt-3"
-                          id="category"
-                        >
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent position="popper">
-                          <SelectItem value="next">Next.js</SelectItem>
-                          <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                          <SelectItem value="astro">Astro</SelectItem>
-                          <SelectItem value="nuxt">Nuxt.js</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <Button type="submit" className="bg-projectGreen">
-                    Submit and continue entry
-                  </Button>
-                  <DialogClose asChild>
-                    <Button className="bg-projectRed mb-6">Cancel</Button>
-                  </DialogClose>
-                </DialogContent>
-              </form>
-            </Dialog> */}
             </CardHeader>
             <CardContent>
               <div className=" grid w-full items-center gap-4 text-white">
@@ -403,6 +310,10 @@ export default function Page() {
                               <SelectItem value="safe-guarding">
                                 Safe Guarding
                               </SelectItem>
+                              <SelectItem value="Technical">
+                                Technical
+                              </SelectItem>
+                              <SelectItem value="LOC">LOC</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -412,6 +323,7 @@ export default function Page() {
                   </div>
                 </div>
 
+                {/* item name div  */}
                 <div className="mt-8 flex ">
                   <div className="w-1/3">
                     <FormField
@@ -477,7 +389,7 @@ export default function Page() {
                                 <SelectValue placeholder="Select a category" />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent className="border-dashboardBackground text-white border-dashboardBackground">
+                            <SelectContent className="border-dashboardBackground text-white">
                               <SelectItem value="home-equipment">
                                 Home Equipment
                               </SelectItem>
@@ -489,6 +401,9 @@ export default function Page() {
                               <SelectItem value="stationery">
                                 Stationery
                               </SelectItem>
+                              <SelectItem value="electronics">
+                                Electronics
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -498,57 +413,53 @@ export default function Page() {
                   </div>
                 </div>
 
-                <div className=" mt-8 min-h-48">
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel htmlFor="description">Description</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            className="bg-transparent min-h-32 border-dashboardBackground mt-3 text-white "
-                            placeholder="Add any relevant comments about the item"
-                            id="description"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="mt-6 flex">
+                <div className="mt-8 flex">
                   <div className="w-1/3">
                     <FormField
                       control={form.control}
-                      name="dateOfPurchase"
+                      name="itemCondition"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel htmlFor="date-of-purchase">
-                            Date of Purchase (Optional)
+                          <FormLabel htmlFor="item-condition">
+                            Item condition
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            name="item-condition"
+                          >
+                            <FormControl>
+                              <SelectTrigger className="bg-transparent border-dashboardBackground mt-3 text-white  rounded-md ">
+                                <SelectValue placeholder="Select the condition of the item" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="border-dashboardBackground text-white">
+                              <SelectItem value="Good">Good</SelectItem>
+                              <SelectItem value="Bad">Bad</SelectItem>
+                              <SelectItem value="Damaged">Damaged</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="w-1/3">
+                    <FormField
+                      control={form.control}
+                      name="productCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel htmlFor="productCode">
+                            Product Code
                           </FormLabel>
                           <FormControl>
                             <Input
-                              type="date"
-                              className="bg-transparent border-dashboardBackground mt-3 text-white "
-                              placeholder="The date when the item was purchased"
-                              id="date-of-purchase"
-                              // Ensure the value is always a string in 'YYYY-MM-DD' format
-                              value={
-                                field.value
-                                  ? field.value instanceof Date
-                                    ? field.value.toISOString().split("T")[0]
-                                    : field.value
-                                  : ""
-                              }
-                              onChange={(e) => {
-                                field.onChange(e.target.value); // type="date" input already provides value as 'YYYY-MM-DD' string
-                              }}
-                              onBlur={field.onBlur} // Keep onBlur from {...field}
-                              name={field.name} // Keep name from {...field}
-                              ref={field.ref} // Keep ref from {...field}
+                              className="bg-transparent border-dashboardBackground mt-3 text-white placeholder-gray-500 "
+                              placeholder="The product code of the item"
+                              id="productCode"
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
@@ -560,13 +471,7 @@ export default function Page() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-row ">
-              <Button
-                type="submit"
-                onClick={() => {
-                  console.log("This also means you submitted");
-                }}
-                className="bg-projectGreen"
-              >
+              <Button type="submit" className="bg-projectGreen">
                 Submit
               </Button>
               <Button className="bg-projectRed hover:bg-projectRed">

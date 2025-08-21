@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "@/lib/firebase";
 import {
   collection,
+  deleteDoc,
   doc,
   runTransaction,
   serverTimestamp,
@@ -30,13 +31,16 @@ export async function markItemAsStockOut(
   itemId: string,
   userId: string,
   quantity: number,
-  destination: string
+  recipientName: string,
+  recipientPhoneNumber: number,
+  cluster: string
 ) {
   const itemRef = doc(db, "items", itemId);
   const transactionsCollectionRef = collection(db, "transactions");
 
   await runTransaction(db, async (transaction) => {
     const itemDoc = await transaction.get(itemRef);
+    console.log("Item Document:", itemDoc.data());
 
     if (!itemDoc.exists()) {
       throw new Error("Item does not exist!");
@@ -53,14 +57,51 @@ export async function markItemAsStockOut(
 
     const currentTimestampFromSA = serverTimestamp();
 
+    const newTransactionRef = doc(transactionsCollectionRef);
     // Create a new transaction record.
     const transactionData = {
+      barcode: itemDoc.data().barCode,
+      itemName: itemDoc.data().itemName,
+      category: itemDoc.data().category,
+      serialNumber: itemDoc.data().serialNumber,
       itemId: itemRef.id,
       quantity: quantity,
-      destination: destination,
+      remaining: newQuantity,
+      recipientName: recipientName,
+      recipientPhoneNumber: recipientPhoneNumber,
+      cluster: cluster,
       type: "stock-out",
       userId: userId,
       date: Timestamp.fromDate(new Date()),
+      currentTimestamp: currentTimestampFromSA,
+      productCode: itemDoc.data().productCode,
+    };
+    transaction.set(newTransactionRef, transactionData);
+  });
+
+  revalidatePath("/inventory");
+  revalidatePath("/transactions");
+  redirect("/inventory");
+}
+
+export async function markItemAsStockIn(itemId: string, userId: string) {
+  const itemRef = doc(db, "items", itemId);
+  const transactionsCollectionRef = collection(db, "transactions");
+
+  await runTransaction(db, async (transaction) => {
+    const itemDoc = await transaction.get(itemRef);
+
+    if (!itemDoc.exists()) {
+      throw new Error("Item does not exist!");
+    }
+
+    const currentTimestampFromSA = serverTimestamp();
+
+    // Create a new transaction record.
+    const transactionData = {
+      itemId: itemRef.id,
+      type: "stock-in",
+      userId: userId,
       currentTimestamp: currentTimestampFromSA,
     };
     await addDoc(transactionsCollectionRef, transactionData);
@@ -80,7 +121,7 @@ const updateItemSchema = z.object({
   cluster: z.string().min(1, "Cluster is required."),
   quantity: z.coerce.number().min(0, "Quantity must be a non-negative number."),
   categoryId: z.string().min(1, "Category is required."),
-  description: z.string().optional(),
+  itemCondition: z.string().min(1, "Item condition is required."),
 });
 
 /**
@@ -117,4 +158,14 @@ export async function updateItem(id: string, formData: FormData) {
 
   // Redirect the user back to the inventory page.
   redirect("/dashboard/inventory");
+}
+
+export async function deleteItem(id: string) {
+  try {
+    await deleteDoc(doc(db, "items", id));
+    revalidatePath("/inventory");
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: getErrorMessage(error) };
+  }
 }

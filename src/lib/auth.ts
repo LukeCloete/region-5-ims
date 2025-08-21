@@ -11,7 +11,7 @@ import { app } from "./firebase"; // Assumes you have your Firebase app initiali
 import { useEffect, useState } from "react";
 
 // Define a type for user roles
-export type UserRole = "admin" | "volunteer";
+export type UserRole = "admin" | "user" | "superuser";
 
 // Define an interface for the authenticated user, extending the Firebase User type
 export interface AuthUser extends User {
@@ -43,6 +43,8 @@ export async function signIn(
 
     // If no role is found, treat it as an error
     return { user: null, error: "User role not found." };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return { user: null, error: error.message };
   }
@@ -61,15 +63,16 @@ export async function signUp(
     );
     const user = userCredential.user;
 
-    // Automatically set the new user's role to 'volunteer' in Firestore
+    // Automatically set the new user's role to 'user' in Firestore
     const userRef = doc(db, "users", user.uid);
     await setDoc(userRef, {
       email: user.email,
-      role: "volunteer",
+      role: "user",
     });
 
-    const authUser: AuthUser = { ...user, role: "volunteer" };
+    const authUser: AuthUser = { ...user, role: "user" };
     return { user: authUser, error: null };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     return { user: null, error: error.message };
   }

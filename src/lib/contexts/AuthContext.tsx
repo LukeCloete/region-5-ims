@@ -18,6 +18,7 @@ export interface AuthUserWithRole {
 interface AuthContextType {
   user: AuthUserWithRole | null;
   loading: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   error: any;
 }
 
