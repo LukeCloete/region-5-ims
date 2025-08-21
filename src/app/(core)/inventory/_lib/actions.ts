@@ -40,6 +40,7 @@ export async function markItemAsStockOut(
 
   await runTransaction(db, async (transaction) => {
     const itemDoc = await transaction.get(itemRef);
+    console.log("Item Document:", itemDoc.data());
 
     if (!itemDoc.exists()) {
       throw new Error("Item does not exist!");
@@ -58,8 +59,13 @@ export async function markItemAsStockOut(
 
     // Create a new transaction record.
     const transactionData = {
+      barcode: itemDoc.data().barCode,
+      itemName: itemDoc.data().itemName,
+      category: itemDoc.data().category,
+      serialNumber: itemDoc.data().serialNumber,
       itemId: itemRef.id,
       quantity: quantity,
+      remaining: newQuantity,
       recipientName: recipientName,
       recipientPhoneNumber: recipientPhoneNumber,
       cluster: cluster,

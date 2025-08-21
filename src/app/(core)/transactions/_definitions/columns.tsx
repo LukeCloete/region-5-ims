@@ -13,7 +13,6 @@ export interface Transaction {
   remaining: number;
   source: string;
   barcode?: string;
-  destination: string;
   type: "stock-in" | "stock-out";
   userId: string;
   date: Timestamp;
@@ -78,7 +77,7 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
-    accessorKey: "item-name",
+    accessorKey: "itemName",
     header: ({ column }) => {
       return (
         <Button
@@ -162,14 +161,14 @@ export const columns: ColumnDef<Transaction>[] = [
   //   },
   // },
   {
-    accessorKey: "destination",
+    accessorKey: "recipientName",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Destination
+          Recipient name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
