@@ -11,7 +11,7 @@ import { app } from "./firebase"; // Assumes you have your Firebase app initiali
 import { useEffect, useState } from "react";
 
 // Define a type for user roles
-export type UserRole = "admin" | "volunteer";
+export type UserRole = "admin" | "user" | "superuser";
 
 // Define an interface for the authenticated user, extending the Firebase User type
 export interface AuthUser extends User {
@@ -70,7 +70,7 @@ export async function signUp(
       role: "volunteer",
     });
 
-    const authUser: AuthUser = { ...user, role: "volunteer" };
+    const authUser: AuthUser = { ...user, role: "user" };
     return { user: authUser, error: null };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
