@@ -131,12 +131,9 @@ export default function Page() {
   };
 
   return (
-    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden bg-dashboardBackgroundDark px-2 py-4 ">
+    <div className="flex flex-col md:flex-row md:overflow-hidden bg-dashboardBackgroundDark px-2 py-4 ">
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="w-full h-screen"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
           {/* Add / Scan item */}
           <Card className="bg-dashboardBackgroundDark border-dashboardBackground">
             <CardHeader>
@@ -200,75 +197,6 @@ export default function Page() {
                   </DialogContent>
                 </div>
               </Dialog>
-
-              {/* <Dialog>
-              <form>
-                <DialogTrigger asChild>
-                  <Button className="w-1/6 bg-projectGreen ">2ND DIALOG</Button>
-                </DialogTrigger>
-                <DialogContent className="bg-dashboardBackgroundDark border-dashboardBackground text-white sm:max-w-[576px] ">
-                  <DialogHeader>
-                    <div className="mt-3">
-                      <DialogTitle>This item already exists</DialogTitle>
-                      <DialogDescription className="text-white">
-                        Thebarcode you entered is assigned to an existing item.
-                      </DialogDescription>
-                    </div>
-                    <div className="mt-3">
-                      <DialogTitle className="mt-3">Existing item:</DialogTitle>
-                      <DialogDescription className="text-white">
-                        <div className="mt-2">
-                          <p>Barcode Number:</p>
-                        </div>
-                        <div>
-                          <p>Category:</p>
-                        </div>
-                        <div>
-                          <p>Cluster:</p>
-                        </div>
-                      </DialogDescription>
-                    </div>
-                  </DialogHeader>
-                  <div className="grid gap-4 mb-6">
-                    <DialogTitle className="mt-3">
-                      Add quantity of scanned item:
-                    </DialogTitle>
-                    <div className="grid gap-3 mt-4">
-                      <Label htmlFor="quantity">Quantity</Label>
-                      <Input
-                        className="bg-transparent border-dashboardBackground "
-                        id="quantity"
-                        name="quantity"
-                      />
-                    </div>
-                    <DialogTitle className="mt-3">Change Cluster:</DialogTitle>
-                    <div className="grid gap-3 mt-4">
-                      <Label htmlFor="Cluster">Cluster</Label>
-                      <Select>
-                        <SelectTrigger
-                          className="bg-transparent border-dashboardBackground mt-3"
-                          id="category"
-                        >
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent position="popper">
-                          <SelectItem value="next">Next.js</SelectItem>
-                          <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                          <SelectItem value="astro">Astro</SelectItem>
-                          <SelectItem value="nuxt">Nuxt.js</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <Button type="submit" className="bg-projectGreen">
-                    Submit and continue entry
-                  </Button>
-                  <DialogClose asChild>
-                    <Button className="bg-projectRed mb-6">Cancel</Button>
-                  </DialogClose>
-                </DialogContent>
-              </form>
-            </Dialog> */}
             </CardHeader>
             <CardContent>
               <div className=" grid w-full items-center gap-4 text-white">
@@ -474,7 +402,7 @@ export default function Page() {
                   </div>
                 </div>
 
-                <div className=" mt-8 min-h-48">
+                <div className="mt-8">
                   <FormField
                     control={form.control}
                     name="itemCondition"
@@ -493,7 +421,7 @@ export default function Page() {
                               <SelectValue placeholder="Select the condition of the item" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="border-dashboardBackground text-white border-dashboardBackground">
+                          <SelectContent className="border-dashboardBackground text-white">
                             <SelectItem value="Good">Good</SelectItem>
                             <SelectItem value="Bad">Bad</SelectItem>
                             <SelectItem value="Damaged">Damaged</SelectItem>
