@@ -48,14 +48,16 @@ const ActionCell = ({ item }: { item: Item }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <StockOutDialog item={item} />
         {canEditOrDelete && (
           <>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
               <StockInConfirmationDialog item={item} userUid={user.uid} />
             </DropdownMenuItem>
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
-              <StockOutDialog item={item} />
-            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              asChild
+            ></DropdownMenuItem>
             <DropdownMenuItem>
               <Link
                 className="w-full px-2  justify-start font-normal"
