@@ -74,6 +74,7 @@ const formSchema = z.object({
   ]),
   itemCondition: z.enum(["Good", "Bad", "Damaged", ""]),
   dateOfPurchase: z.date(),
+  productCode: z.string(),
 });
 
 export default function Page() {
@@ -88,6 +89,7 @@ export default function Page() {
       category: "None",
       itemCondition: "",
       dateOfPurchase: new Date(),
+      productCode: "",
     },
   });
 
@@ -120,6 +122,7 @@ export default function Page() {
     formData.append("item-name", values.itemName);
     formData.append("quantity", values.quantity.toString());
     formData.append("item-condition", values.itemCondition);
+    formData.append("productCode", values.productCode);
     toast.info("Adding item...");
     try {
       await addItem(formData);
@@ -313,6 +316,7 @@ export default function Page() {
                   </div>
                 </div>
 
+                {/* item name div  */}
                 <div className="mt-8 flex ">
                   <div className="w-1/3">
                     <FormField
@@ -402,35 +406,60 @@ export default function Page() {
                   </div>
                 </div>
 
-                <div className="mt-8">
-                  <FormField
-                    control={form.control}
-                    name="itemCondition"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel htmlFor="item-condition">
-                          Item condition
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          name="item-condition"
-                        >
+                <div className="mt-8 flex">
+                  <div className="w-1/3">
+                    <FormField
+                      control={form.control}
+                      name="itemCondition"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel htmlFor="item-condition">
+                            Item condition
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            name="item-condition"
+                          >
+                            <FormControl>
+                              <SelectTrigger className="bg-transparent border-dashboardBackground mt-3 text-white  rounded-md ">
+                                <SelectValue placeholder="Select the condition of the item" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="border-dashboardBackground text-white">
+                              <SelectItem value="Good">Good</SelectItem>
+                              <SelectItem value="Bad">Bad</SelectItem>
+                              <SelectItem value="Damaged">Damaged</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="w-1/3">
+                    <FormField
+                      control={form.control}
+                      name="productCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel htmlFor="productCode">
+                            Product Code
+                          </FormLabel>
                           <FormControl>
-                            <SelectTrigger className="bg-transparent border-dashboardBackground mt-3 text-white  rounded-md ">
-                              <SelectValue placeholder="Select the condition of the item" />
-                            </SelectTrigger>
+                            <Input
+                              className="bg-transparent border-dashboardBackground mt-3 text-white placeholder-gray-500 "
+                              placeholder="The product code of the item"
+                              id="productCode"
+                              {...field}
+                            />
                           </FormControl>
-                          <SelectContent className="border-dashboardBackground text-white">
-                            <SelectItem value="Good">Good</SelectItem>
-                            <SelectItem value="Bad">Bad</SelectItem>
-                            <SelectItem value="Damaged">Damaged</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
             </CardContent>

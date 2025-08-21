@@ -45,6 +45,7 @@ export async function getAllItems(): Promise<Item[]> {
         itemCondition: docData.itemCondition,
         currentTimestamp: docData.currentTimestamp,
         dateOfPurchase: docData.dateOfPurchase,
+        productCode: docData.productCode || "",
       } as Item;
     });
 
