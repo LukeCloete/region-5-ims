@@ -33,6 +33,43 @@ export interface Item {
   dateOfPurchase: Timestamp;
 }
 
+// A dedicated component to handle the cell's interactive logic and hooks.
+const ActionCell = ({ item }: { item: Item }) => {
+  const router = useRouter();
+
+  const handleDelete = async () => {
+    try {
+      const result = await deleteItem(item.id);
+      if (result.success) {
+        toast.success("Item deleted successfully.");
+        router.refresh();
+      } else {
+        toast.error(getErrorMessage(result) || "Failed to delete item.");
+      }
+    } catch (e) {
+      toast.error(getErrorMessage(e));
+    }
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <StockOutDialog item={item} />
+        <Link href={`/inventory/edit/${item.id}`}>
+          <DropdownMenuItem>Edit Item</DropdownMenuItem>
+        </Link>
+        <DeleteConfirmationDialog item={item} onDelete={handleDelete} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 // Define the columns.
 export const columns: ColumnDef<Item>[] = [
   {
@@ -195,48 +232,7 @@ export const columns: ColumnDef<Item>[] = [
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const item = row.original;
-
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const router = useRouter(); // Initialize the router
-
-      const handleDelete = async () => {
-        try {
-          const result = await deleteItem(item.id);
-          if (result.success) {
-            toast.success("Item deleted successfully.");
-            router.refresh(); // Refresh the current page to update the table
-          } else {
-            toast.error(getErrorMessage(result) || "Failed to delete item.");
-          }
-        } catch (e) {
-          toast.error(getErrorMessage(e));
-        } finally {
-        }
-      };
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <StockOutDialog item={item} />
-            <Link href={`/inventory/edit/${item.id}`}>
-              <DropdownMenuItem>Edit Item</DropdownMenuItem>
-            </Link>
-            <DeleteConfirmationDialog
-              item={row.original}
-              onDelete={handleDelete}
-            />
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <ActionCell item={row.original} />;
     },
   },
-  // A column for actions will need to be added on the page component
-  // where the UI components are available.
 ];
