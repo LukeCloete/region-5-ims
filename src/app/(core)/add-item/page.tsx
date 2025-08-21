@@ -492,7 +492,7 @@ export default function Page() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="border-dashboardBackground text-white border-dashboardBackground">
-                            <SelectItem value="Good">Home Equipment</SelectItem>
+                            <SelectItem value="Good">Good</SelectItem>
                             <SelectItem value="Bad">Bad</SelectItem>
                             <SelectItem value="Damaged">Damaged</SelectItem>
                           </SelectContent>
