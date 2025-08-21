@@ -16,12 +16,8 @@ export async function addItem(formData: FormData) {
     itemName: formData.get("item-name"),
     quantity: formData.get("quantity"),
     itemCondition: formData.get("item-condition"),
+    productCode: formData.get("productCode"),
   };
-
-  // Convert match_date to Timestamp
-  // const dateOfPurchaseAsTimestamp = rawFormData.dateOfPurchase
-  //   ? Timestamp.fromDate(new Date(rawFormData.dateOfPurchase.toString()))
-  //   : null;
 
   const barcodeAsNumber = Number(rawFormData.barcode);
 
@@ -36,6 +32,7 @@ export async function addItem(formData: FormData) {
     quantity: rawFormData.quantity,
     itemCondition: rawFormData.itemCondition,
     currentTimestamp: currentTimestampFromSA,
+    productCode: rawFormData.productCode,
   };
 
   await addDoc(collection(db, "items"), itemData);

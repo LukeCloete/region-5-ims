@@ -31,6 +31,7 @@ export interface Item {
   quantity: number;
   categoryId: string;
   itemCondition: string;
+  productCode: string;
   currentTimestamp: Timestamp;
 }
 
@@ -189,7 +190,7 @@ export const columns: ColumnDef<Item>[] = [
     },
   },
   {
-    accessorKey: "id",
+    accessorKey: "productCode",
     header: ({ column }) => {
       return (
         <Button
