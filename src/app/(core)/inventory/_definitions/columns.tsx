@@ -29,7 +29,7 @@ export interface Item {
   name: string;
   quantity: number;
   categoryId: string;
-  description: string;
+  itemCondition: string;
   dateOfPurchase: Timestamp;
 }
 
@@ -199,8 +199,18 @@ export const columns: ColumnDef<Item>[] = [
     },
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: "itemCondition",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Item condition
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "dateOfPurchase",

@@ -13,7 +13,7 @@ export async function addItem(formData: FormData) {
     category: formData.get("category"),
     itemName: formData.get("item-name"),
     quantity: formData.get("quantity"),
-    description: formData.get("description"),
+    itemCondition: formData.get("item-condition"),
     dateOfPurchase: formData.get("date-of-purchase"),
   };
 
@@ -33,7 +33,7 @@ export async function addItem(formData: FormData) {
     category: rawFormData.category,
     itemName: rawFormData.itemName,
     quantity: rawFormData.quantity,
-    description: rawFormData.description,
+    itemCondition: rawFormData.itemCondition,
     dateOfPurchase: rawFormData.dateOfPurchase,
     currentTimestamp: currentTimestampFromSA,
   };

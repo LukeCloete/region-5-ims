@@ -45,7 +45,7 @@ export async function getAllItems(): Promise<Item[]> {
         name: docData.itemName,
         quantity: docData.quantity,
         categoryId: docData.category,
-        description: docData.description || "No description",
+        itemCondition: docData.itemCondition,
         dateOfPurchase: docData.dateOfPurchase,
       } as Item;
     });
