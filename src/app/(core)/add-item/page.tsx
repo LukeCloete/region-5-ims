@@ -380,7 +380,7 @@ export default function Page() {
                             </FormControl>
                             <SelectContent className="border-dashboardBackground text-white">
                               <SelectItem value="home-equipment">
-                                Good
+                                Home Equipment
                               </SelectItem>
                               <SelectItem value="branding">Branding</SelectItem>
                               <SelectItem value="gadgets">Gadgets</SelectItem>
