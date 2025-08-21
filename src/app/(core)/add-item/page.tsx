@@ -72,7 +72,7 @@ const formSchema = z.object({
     "stationery",
     "None",
   ]),
-  description: z.string(),
+  itemCondition: z.enum(["Good", "Bad", "Damaged", ""]),
   dateOfPurchase: z.date(),
 });
 
@@ -86,7 +86,7 @@ export default function Page() {
       itemName: "",
       quantity: 0,
       category: "None",
-      description: "",
+      itemCondition: "",
       dateOfPurchase: new Date(),
     },
   });
@@ -121,7 +121,7 @@ export default function Page() {
     formData.append("category", values.category);
     formData.append("item-name", values.itemName);
     formData.append("quantity", values.quantity.toString());
-    formData.append("description", values.description);
+    formData.append("item-condition", values.itemCondition);
     formData.append("date-of-purchase", values.dateOfPurchase.toISOString());
     toast.info(true ? "Adding item..." : "Adding item...");
     try {
@@ -476,18 +476,28 @@ export default function Page() {
                 <div className=" mt-8 min-h-48">
                   <FormField
                     control={form.control}
-                    name="description"
+                    name="itemCondition"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel htmlFor="description">Description</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            className="bg-transparent min-h-32 border-dashboardBackground mt-3 text-white "
-                            placeholder="Add any relevant comments about the item"
-                            id="description"
-                            {...field}
-                          />
-                        </FormControl>
+                        <FormLabel htmlFor="item-condition">
+                          Item condition
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          name="item-condition"
+                        >
+                          <FormControl>
+                            <SelectTrigger className="bg-transparent border-dashboardBackground mt-3 text-white  rounded-md ">
+                              <SelectValue placeholder="Select the condition of the item" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="border-dashboardBackground text-white border-dashboardBackground">
+                            <SelectItem value="Good">Home Equipment</SelectItem>
+                            <SelectItem value="Bad">Bad</SelectItem>
+                            <SelectItem value="Damaged">Damaged</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
