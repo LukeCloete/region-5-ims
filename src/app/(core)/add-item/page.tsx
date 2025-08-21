@@ -69,6 +69,7 @@ const formSchema = z.object({
     "gadgets",
     "it-networking",
     "stationery",
+    "electronics",
     "None",
   ]),
   itemCondition: z.enum(["Good", "Bad", "Damaged", ""]),
@@ -466,6 +467,9 @@ export default function Page() {
                               </SelectItem>
                               <SelectItem value="stationery">
                                 Stationery
+                              </SelectItem>
+                              <SelectItem value="electronics">
+                                Electronics
                               </SelectItem>
                             </SelectContent>
                           </Select>
