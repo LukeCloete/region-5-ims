@@ -31,7 +31,8 @@ export async function markItemAsStockOut(
   itemId: string,
   userId: string,
   quantity: number,
-  destination: string
+  recipientName: string,
+  recipientPhoneNumber: number
 ) {
   const itemRef = doc(db, "items", itemId);
   const transactionsCollectionRef = collection(db, "transactions");
@@ -58,7 +59,8 @@ export async function markItemAsStockOut(
     const transactionData = {
       itemId: itemRef.id,
       quantity: quantity,
-      destination: destination,
+      recipientName: recipientName,
+      recipientPhoneNumber: recipientPhoneNumber,
       type: "stock-out",
       userId: userId,
       date: Timestamp.fromDate(new Date()),
