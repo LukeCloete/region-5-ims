@@ -68,6 +68,7 @@ export async function markItemAsStockOut(
   });
 
   revalidatePath("/inventory");
+  revalidatePath("/transactions");
   redirect("/inventory");
 }
 
