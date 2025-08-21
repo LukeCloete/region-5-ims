@@ -15,8 +15,6 @@ export async function getAllItems(): Promise<Item[]> {
     const items: Item[] = itemsSnapshot.docs.map((doc) => {
       const docData = doc.data();
 
-      // console.log("This is the doc id", documentId);
-
       // Handle barcode conversion, ensuring it's a number and not NaN.
       // We use radix 10 to ensure it's parsed as a decimal number.
 
@@ -35,7 +33,6 @@ export async function getAllItems(): Promise<Item[]> {
       // if (docData.dateOfPurchase instanceof Timestamp) {
       //   dateOfPurchase = docData.dateOfPurchase.toDate().toISOString();
       // }
-      // console.log(barcodeValue);
 
       return {
         id: doc.id,
@@ -45,8 +42,10 @@ export async function getAllItems(): Promise<Item[]> {
         name: docData.itemName,
         quantity: docData.quantity,
         categoryId: docData.category,
-        description: docData.description || "No description",
+        itemCondition: docData.itemCondition,
+        currentTimestamp: docData.currentTimestamp,
         dateOfPurchase: docData.dateOfPurchase,
+        productCode: docData.productCode || "",
       } as Item;
     });
 

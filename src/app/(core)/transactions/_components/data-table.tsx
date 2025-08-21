@@ -32,7 +32,8 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-
+import { useRouter } from "next/navigation";
+import { RefreshCcw } from "lucide-react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -46,6 +47,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -66,6 +68,10 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  const handleRefresh = () => {
+    router.refresh();
+  };
+
   return (
     <div>
       <div className="flex items-center py-4">
@@ -77,7 +83,14 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-
+        <Button
+          variant="ghost"
+          className="flex items-center space-x-2"
+          onClick={handleRefresh}
+        >
+          <RefreshCcw className="h-4 w-4" />
+          <span>Refresh</span>
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

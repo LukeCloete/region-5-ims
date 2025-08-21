@@ -19,7 +19,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Loader2, ArrowLeft } from "lucide-react";
 import {
   Select,
@@ -39,7 +38,8 @@ const formSchema = z.object({
   cluster: z.string().min(1, "Cluster is required."),
   quantity: z.number().min(0, "Quantity must be a non-negative number."),
   category: z.string().min(1, "Category is required."),
-  description: z.string().optional(),
+  itemCondition: z.enum(["Good", "Bad", "Damaged"]),
+  productCode: z.string(),
 });
 
 // The main component for the dynamic edit page.
@@ -60,7 +60,7 @@ export default function Page({ params }: { params: { id: string } }) {
       cluster: "",
       quantity: 0,
       category: "",
-      description: "",
+      itemCondition: "Good",
     },
   });
 
@@ -82,7 +82,7 @@ export default function Page({ params }: { params: { id: string } }) {
             cluster: docData.cluster,
             quantity: docData.quantity,
             category: docData.category,
-            description: docData.description,
+            itemCondition: docData.itemCondition,
           });
         } else {
           setError("Item not found.");
@@ -177,6 +177,21 @@ export default function Page({ params }: { params: { id: string } }) {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="productCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Code</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="barcode"
@@ -250,6 +265,8 @@ export default function Page({ params }: { params: { id: string } }) {
                         <SelectItem value="safe-guarding">
                           Safe Guarding
                         </SelectItem>
+                        <SelectItem value="loc">LOC</SelectItem>
+                        <SelectItem value="technical">Technical</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -284,6 +301,7 @@ export default function Page({ params }: { params: { id: string } }) {
                           IT/Networking
                         </SelectItem>
                         <SelectItem value="stationery">Stationery</SelectItem>
+                        <SelectItem value="electronics">Electronics</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -310,29 +328,26 @@ export default function Page({ params }: { params: { id: string } }) {
             />
             <FormField
               control={form.control}
-              name="category"
+              name="itemCondition"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Optional description..."
-                      {...field}
-                    />
-                  </FormControl>
+                  <FormLabel htmlFor="item-condition">Item condition</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    name="item-condition"
+                  >
+                    <FormControl>
+                      <SelectTrigger className="bg-transparent border-dashboardBackground mt-3 text-white  rounded-md ">
+                        <SelectValue placeholder="Select the condition of the item" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="border-dashboardBackground text-white">
+                      <SelectItem value="Good">Good</SelectItem>
+                      <SelectItem value="Bad">Bad</SelectItem>
+                      <SelectItem value="Damaged">Damaged</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

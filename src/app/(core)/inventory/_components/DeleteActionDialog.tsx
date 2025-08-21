@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { MoreHorizontal } from "lucide-react";
+import { CircleDotDashed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/utils";
 import { deleteItem } from "../_lib/actions";
@@ -16,16 +16,8 @@ import { Item } from "../_definitions/columns";
  *
  * @param {object} props - The component props.
  * @param {Item} props.item - The item object to be deleted.
- * @param {() => void} props.onDelete - Callback to trigger the deletion process.
  */
-const DeleteConfirmationDialog = ({
-  item,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onDelete,
-}: {
-  item: Item;
-  onDelete: () => void;
-}) => {
+const DeleteConfirmationDialog = ({ item }: { item: Item }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
@@ -75,7 +67,7 @@ const DeleteConfirmationDialog = ({
                 disabled={isDeleting}
               >
                 {isDeleting ? (
-                  <MoreHorizontal className="h-4 w-4 animate-spin" />
+                  <CircleDotDashed className="h-4 w-4 animate-spin" />
                 ) : (
                   "Delete"
                 )}
