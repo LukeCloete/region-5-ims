@@ -38,7 +38,6 @@ export async function addItem(formData: FormData) {
     currentTimestamp: currentTimestampFromSA,
   };
 
-  console.log("Raw Form Data:", rawFormData);
   await addDoc(collection(db, "items"), itemData);
 
   // import { doc, setDoc, serverTimestamp } from "firebase/firestore";
