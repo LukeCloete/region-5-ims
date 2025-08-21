@@ -41,7 +41,7 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         quantity: docData.quantity || 0,
         source: docData.source || "N/A",
         barcode: docData.barcode || "N/A",
-        destination: docData.destination || "N/A",
+        recipientName: docData.recipientName || "N/A",
         type: docData.type || "N/A",
         userId: docData.userId || "N/A",
         date: docData.date,
@@ -49,8 +49,7 @@ export async function getAllTransactions(): Promise<Transaction[]> {
         category: docData.category || "N/A",
         serialNumber: docData.serialNumber || "N/A",
         dateOfPurchase: docData.dateOfPurchase,
-        ["item-name"]: docData["item-name"] || "N/A",
-        itemName: docData["item-name"] || "N/A",
+        itemName: docData.itemName || "N/A",
         remaining: docData.remaining ?? 0,
       };
     });
