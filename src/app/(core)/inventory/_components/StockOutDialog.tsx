@@ -87,7 +87,8 @@ export function StockOutDialog({ item }: { item: Item }) {
         user.uid,
         values.quantity,
         values.recipientName,
-        values.recipientPhoneNumber
+        values.recipientPhoneNumber,
+        values.cluster
       );
       toast.success("Item successfully stocked out!");
       setOpen(false);
