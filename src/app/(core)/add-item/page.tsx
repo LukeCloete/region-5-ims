@@ -60,6 +60,8 @@ const formSchema = z.object({
     "health",
     "accomodation",
     "safe-guarding",
+    "Technical",
+    "LOC",
     "None",
   ]),
   itemName: z.string(),

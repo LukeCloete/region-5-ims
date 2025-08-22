@@ -1,18 +1,18 @@
 "use client";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { redirect } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { updateProfile } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import {
-  Card,
-  // CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import getDataForDashboard from "./_lib/data";
+// import {
+//   Card,
+//   // CardAction,
+//   CardDescription,
+//   CardFooter,
+//   CardHeader,
+//   CardTitle,
+// } from "@/components/ui/card";
+// import getDataForDashboard from "./_lib/data";
 
 export default function Page() {
   // function getFormattedDate(date: Date): string {
@@ -27,12 +27,12 @@ export default function Page() {
   const [user] = useAuthState(auth);
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [isEditing, setIsEditing] = useState(!user?.displayName);
-  const [totalInventory, setTotalInventory] = useState<number | null>(null);
+  // const [totalInventory, setTotalInventory] = useState<number | null>(null);
   // const [dailyStockIn, setDailyStockIn] = useState(0);
   // const [dailyStockOut, setDailyStockOut] = useState(0);
-  const [totalItemsAdded, setTotalItemsAdded] = useState(0);
-  const [totalItemsDispensed, setTotalItemsDispensed] = useState(0);
-  const [totalItemsRemaining, setTotalItemsRemaining] = useState(0);
+  // const [totalItemsAdded, setTotalItemsAdded] = useState(0);
+  // const [totalItemsDispensed, setTotalItemsDispensed] = useState(0);
+  // const [totalItemsRemaining, setTotalItemsRemaining] = useState(0);
   // const [totalItemsReturned, setTotalItemsReturned] = useState(0);
 
   if (!user) {
@@ -46,28 +46,28 @@ export default function Page() {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getDataForDashboard();
-      const totalInventory = data.totalInventory;
-      // const dailyStockIn = data.dailyStockIn;
-      // const dailyStockOut = data.dailyStockOut;
-      const totalItemsAdded = data.totalItemsAdded;
-      const totalItemsDispensed = data.totalItemsDispensed;
-      const totalItemsRemaining = data.totalItemsRemaining;
-      // const totalItemsReturned = data.num2;
-      // console.log(data);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     // const data = await getDataForDashboard();
+  //     // const totalInventory = data.totalInventory;
+  //     // const dailyStockIn = data.dailyStockIn;
+  //     // const dailyStockOut = data.dailyStockOut;
+  //     // const totalItemsAdded = data.totalItemsAdded;
+  //     // const totalItemsDispensed = data.totalItemsDispensed;
+  //     // const totalItemsRemaining = data.totalItemsRemaining;
+  //     // const totalItemsReturned = data.num2;
+  //     // console.log(data);
 
-      setTotalInventory(totalInventory);
-      // setDailyStockIn(dailyStockIn);
-      // setDailyStockOut(dailyStockOut);
-      setTotalItemsAdded(totalItemsAdded);
-      setTotalItemsDispensed(totalItemsDispensed);
-      setTotalItemsRemaining(totalItemsRemaining);
-      // setTotalItemsReturned(totalItemsReturned);
-    };
-    fetchData();
-  }, []);
+  //     setTotalInventory(totalInventory);
+  //     // setDailyStockIn(dailyStockIn);
+  //     // setDailyStockOut(dailyStockOut);
+  //     setTotalItemsAdded(totalItemsAdded);
+  //     setTotalItemsDispensed(totalItemsDispensed);
+  //     setTotalItemsRemaining(totalItemsRemaining);
+  //     // setTotalItemsReturned(totalItemsReturned);
+  //   };
+  //   fetchData();
+  // }, []);
 
   return (
     <div>
@@ -97,7 +97,7 @@ export default function Page() {
           </div>
           {/* First row of cards */}
           <div className="flex flex-wrap gap-4 justify-center items-center mt-4">
-            <Card className="@container/card">
+            {/* <Card className="@container/card">
               <CardHeader>
                 <CardDescription>Total inventory Count</CardDescription>
                 <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -105,9 +105,9 @@ export default function Page() {
                 </CardTitle>
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm"></CardFooter>
-            </Card>
+            </Card> */}
 
-            <Card className="@container/card">
+            {/* <Card className="@container/card">
               <CardHeader>
                 <CardDescription>Total Items added</CardDescription>
                 <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -115,9 +115,9 @@ export default function Page() {
                 </CardTitle>
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm"></CardFooter>
-            </Card>
+            </Card> */}
 
-            <Card className="@container/card">
+            {/* <Card className="@container/card">
               <CardHeader>
                 <CardDescription>Total Items Dispensed</CardDescription>
                 <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -125,9 +125,9 @@ export default function Page() {
                 </CardTitle>
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm"></CardFooter>
-            </Card>
+            </Card> */}
 
-            <Card className="@container/card">
+            {/* <Card className="@container/card">
               <CardHeader>
                 <CardDescription>Total Items Remaining</CardDescription>
                 <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -135,7 +135,7 @@ export default function Page() {
                 </CardTitle>
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm"></CardFooter>
-            </Card>
+            </Card> */}
 
             {/* <Card className="@container/card">
               <CardHeader>
