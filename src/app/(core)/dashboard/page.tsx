@@ -49,12 +49,12 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getDataForDashboard();
-      const totalInventory = data.totalInventory;
+      // const totalInventory = data.totalInventory;
       // const dailyStockIn = data.dailyStockIn;
       // const dailyStockOut = data.dailyStockOut;
-      const totalItemsAdded = data.totalItemsAdded;
-      const totalItemsDispensed = data.totalItemsDispensed;
-      const totalItemsRemaining = data.totalItemsRemaining;
+      // const totalItemsAdded = data.totalItemsAdded;
+      // const totalItemsDispensed = data.totalItemsDispensed;
+      // const totalItemsRemaining = data.totalItemsRemaining;
       // const totalItemsReturned = data.num2;
       // console.log(data);
 
@@ -97,7 +97,7 @@ export default function Page() {
           </div>
           {/* First row of cards */}
           <div className="flex flex-wrap gap-4 justify-center items-center mt-4">
-            <Card className="@container/card">
+            {/* <Card className="@container/card">
               <CardHeader>
                 <CardDescription>Total inventory Count</CardDescription>
                 <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -105,9 +105,9 @@ export default function Page() {
                 </CardTitle>
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm"></CardFooter>
-            </Card>
+            </Card> */}
 
-            <Card className="@container/card">
+            {/* <Card className="@container/card">
               <CardHeader>
                 <CardDescription>Total Items added</CardDescription>
                 <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -115,9 +115,9 @@ export default function Page() {
                 </CardTitle>
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm"></CardFooter>
-            </Card>
+            </Card> */}
 
-            <Card className="@container/card">
+            {/* <Card className="@container/card">
               <CardHeader>
                 <CardDescription>Total Items Dispensed</CardDescription>
                 <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -125,9 +125,9 @@ export default function Page() {
                 </CardTitle>
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm"></CardFooter>
-            </Card>
+            </Card> */}
 
-            <Card className="@container/card">
+            {/* <Card className="@container/card">
               <CardHeader>
                 <CardDescription>Total Items Remaining</CardDescription>
                 <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
@@ -135,7 +135,7 @@ export default function Page() {
                 </CardTitle>
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm"></CardFooter>
-            </Card>
+            </Card> */}
 
             {/* <Card className="@container/card">
               <CardHeader>
