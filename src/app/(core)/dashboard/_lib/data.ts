@@ -6,8 +6,18 @@ import {
   getCountFromServer,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+export interface Metrics {
+  totalInventory: number;
+  dailyStockIn: number;
+  dailyStockOut: number;
+  totalItemsAdded: number;
+  totalItemsDispensed: number;
+  totalItemsRemaining: number;
+  totalItemsReturns: number;
+}
 
-export default async function getDataForDashboard() {
+export default async function getDataForDashboard(): Promise<Metrics[]> {
+  const num1 = 1;
   const num2 = 2;
   // The below is how to get all data of items from the database
 
@@ -72,18 +82,29 @@ export default async function getDataForDashboard() {
     const totalRemaining = itemsCounter - stockOutInstancesCount;
 
     // return { itemsCounter, stockInCount };
-    return {
-      totalInventory: itemsCounter,
-      // dailyStockIn: dailyStockInCount,
-      // dailyStockOut: dailyStockOutCount,
-      totalItemsAdded: stockInInstancesCount,
-      totalItemsDispensed: stockOutInstancesCount,
-      totalItemsRemaining: totalRemaining,
-      totalItemsReturned: num2,
-    };
-    return itemsCounter as number;
+    // return {
+    //   totalInventory: itemsCounter,
+    //   // dailyStockIn: dailyStockInCount,
+    //   // dailyStockOut: dailyStockOutCount,
+    //   totalItemsAdded: stockInInstancesCount,
+    //   totalItemsDispensed: stockOutInstancesCount,
+    //   totalItemsRemaining: totalRemaining,
+    //   totalItemsReturned: num2,
+    // };
+    return [
+      {
+        totalInventory: itemsCounter,
+        dailyStockIn: num1,
+        dailyStockOut: num1,
+        totalItemsAdded: stockInInstancesCount,
+        totalItemsDispensed: stockOutInstancesCount,
+        totalItemsRemaining: totalRemaining,
+        totalItemsReturns: num2,
+      },
+    ] as Metrics[];
+    // return itemsCounter as number;
   } catch (error) {
     console.error("Failed to fetch inventory data:", error);
-    return console.error("Failed to fetch inventory data:", error);
+    return [];
   }
 }
