@@ -18,12 +18,14 @@ import {
   User,
   Warehouse,
   LogOut,
+  ArrowUpDown,
 } from "lucide-react";
 import Image from "next/image";
 import LOGO from "../../public/logo.jpg";
 import { usePathname } from "next/navigation";
 import { AuthUserWithRole } from "@/lib/contexts/AuthContext";
 export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
+  const ALLOWED_ROLES = ["admin", "superuser"];
   const pathname = usePathname();
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false); // State for logout dialog
 
@@ -41,7 +43,18 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
     { name: "Inventory", href: "/inventory", icon: Warehouse },
     { name: "Add/ Scan Item", href: "/add-item", icon: ClipboardCopy },
     // { name: "Dispense Item", href: "/dispense-item", icon: ClipboardPaste },
-    { name: "Transactions", href: "/transactions", icon: ArrowLeftRight },
+    {
+      name: "Transactions",
+      href: "/transactions",
+      icon: ArrowLeftRight,
+      allowedRoles: ALLOWED_ROLES,
+    },
+    {
+      name: "Returns",
+      href: "/returns",
+      icon: ArrowUpDown,
+      allowedRoles: ALLOWED_ROLES,
+    },
     // { name: "Reports", href: "/reports", icon: BarChart3 },
     // { name: "Settings", href: "/settings", icon: Settings },
   ];
@@ -82,29 +95,40 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
         <p className="text-slate-50/50 text-xs">General</p>
 
         {navItems.slice(0, 6).map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`w-full rounded-xl flex hover:bg-primary/10 items-center justify-start gap-2 p-2 ${
-                isActive ? "bg-primary" : ""
-              }`}
-            >
-              <item.icon
-                className={`text-md w-5 h-5 ${
-                  isActive ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
-                }`}
-              />
-              <div
-                className={`text-sm ${
-                  isActive ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
+          // Check if the item has an 'allowedRoles' property.
+          const hasRoleRestriction =
+            item.allowedRoles && item.allowedRoles.length > 0;
+          // Check if the user's role is authorized for this item.
+          const isAuthorized =
+            !hasRoleRestriction ||
+            (user && item.allowedRoles.includes(user.role ?? ""));
+
+          if (isAuthorized) {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`w-full rounded-xl flex hover:bg-primary/10 items-center justify-start gap-2 p-2 ${
+                  isActive ? "bg-primary" : ""
                 }`}
               >
-                {item.name}
-              </div>
-            </Link>
-          );
+                <item.icon
+                  className={`text-md w-5 h-5 ${
+                    isActive ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
+                  }`}
+                />
+                <div
+                  className={`text-sm ${
+                    isActive ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
+                  }`}
+                >
+                  {item.name}
+                </div>
+              </Link>
+            );
+          }
+          return null;
         })}
 
         {/* Conditionally render the Reports section ONLY if the user is an admin */}
