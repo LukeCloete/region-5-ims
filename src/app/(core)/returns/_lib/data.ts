@@ -40,31 +40,35 @@ export async function getAllReturns(): Promise<Returns[]> {
       const user = userMap.get(userId);
       const userEmail = user ? user.email : "N/A";
 
-      let stockInAt: string | null = "N/A";
-      if (docData.stockInAt instanceof Timestamp) {
-        stockInAt = docData.stockInAt.toDate().toISOString();
+      let stockInAt: Timestamp | null = null;
+      if (docData.date instanceof Timestamp) {
+        stockInAt = docData.date;
+      } else {
+        stockInAt = null;
       }
 
-      let stockOutAt: string | null = "N/A";
-      if (docData.stockOutAt instanceof Timestamp) {
-        stockOutAt = docData.stockOutAt.toDate().toISOString();
+      let stockOutAt: Timestamp | null = null;
+      if (docData.date instanceof Timestamp) {
+        stockOutAt = docData.currentTimestamp;
+      } else {
+        stockInAt = null;
       }
-
-      let returnedAt: string | null = "N/A";
+      let returnedAt: Timestamp | null = null;
       if (docData.returnedAt instanceof Timestamp) {
-        returnedAt = docData.returnedAt.toDate().toISOString();
+        returnedAt = docData.returnedAt;
+      } else {
+        returnedAt = null;
       }
 
-      console.log("Return Document:", docData);
       return {
         id: doc.id,
         itemId: docData.itemId || "N/A",
         userEmail: userEmail,
         itemName: docData.itemName || "N/A",
-        stockInAt: docData.stockInAt || "N/A",
-        stockOutAt: docData.stockOutAt || "N/A",
-        returnedAt: docData.returnedAt || "N/A",
-        quantity: docData.quantity || 0,
+        stockInAt: stockInAt,
+        stockOutAt: stockOutAt,
+        returnedAt: returnedAt,
+        quantity: docData.returnedQuantity || 0,
         remaining: docData.remaining || 0,
         barcode: docData.barcode || "N/A",
         productCode: docData.productCode || "N/A",
@@ -73,6 +77,7 @@ export async function getAllReturns(): Promise<Returns[]> {
         category: docData.category || "N/A",
         itemCondition: docData.itemCondition || "N/A",
         recipientName: docData.recipientName || "N/A",
+        recipientPhoneNumber: docData.recipientPhoneNumber || "N/A",
       } as Returns;
     });
 

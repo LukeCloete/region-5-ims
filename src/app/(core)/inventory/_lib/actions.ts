@@ -37,7 +37,6 @@ export async function markItemAsStockOut(
 ) {
   const itemRef = doc(db, "items", itemId);
   const transactionsCollectionRef = collection(db, "transactions");
-  const returnsCollectionRef = collection(db, "returns");
 
   await runTransaction(db, async (transaction) => {
     const itemDoc = await transaction.get(itemRef);
@@ -78,27 +77,10 @@ export async function markItemAsStockOut(
     };
     const newTransactionRef = doc(transactionsCollectionRef);
     transaction.set(newTransactionRef, transactionData);
-
-    const returnData = {
-      itemId: itemRef.id,
-      itemName: itemDoc.data().itemName,
-      barcode: itemDoc.data().barCode,
-      serialNumber: itemDoc.data().serialNumber,
-      productCode: itemDoc.data().productCode,
-      quantity: quantity, // The quantity that was stocked out
-      cluster: cluster,
-      userId: userId,
-      recipientName: recipientName,
-      stockOutAt: Timestamp.fromDate(new Date()), // Timestamp of the stock out event
-      returnedAt: null, // Placeholder for when the item is returned
-    };
-    const newReturnRef = doc(returnsCollectionRef);
-    transaction.set(newReturnRef, returnData);
   });
 
   revalidatePath("/inventory");
   revalidatePath("/transactions");
-  revalidatePath("/returns");
   redirect("/inventory");
 }
 

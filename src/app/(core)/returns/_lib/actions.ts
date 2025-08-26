@@ -14,20 +14,21 @@ import { revalidatePath } from "next/cache";
  * @returns {Promise<void>} A promise that resolves when the operation is complete.
  */
 export async function markItemAsReturned(
-  returnId: string,
+  transactionId: string,
   userId: string,
-  quantity: number
+  quantityToReturn: number
 ) {
-  const returnRef = doc(db, "transactions", returnId);
+  const transactionRef = doc(db, "transactions", transactionId);
 
   await runTransaction(db, async (transaction) => {
-    const returnDoc = await transaction.get(returnRef);
-    if (!returnDoc.exists()) {
-      throw new Error("Return record does not exist!");
+    // 1. Get the original stocked-out transaction document.
+    const transactionDoc = await transaction.get(transactionRef);
+    if (!transactionDoc.exists()) {
+      throw new Error("Transaction record does not exist!");
     }
 
-    // Get the item ID from the return record to update the main inventory.
-    const itemId = returnDoc.data().itemId;
+    // 2. Get the associated item from the 'items' collection.
+    const itemId = transactionDoc.data().itemId;
     const itemRef = doc(db, "items", itemId);
     const itemDoc = await transaction.get(itemRef);
 
@@ -35,37 +36,40 @@ export async function markItemAsReturned(
       throw new Error("Associated item does not exist!");
     }
 
-    const currentReturnedQuantity = returnDoc.data().returnedQuantity || 0;
-    const newReturnedQuantity = currentReturnedQuantity + quantity;
+    const currentQuantityInTransaction = transactionDoc.data().quantity;
+    const newQuantityInTransaction =
+      currentQuantityInTransaction - quantityToReturn;
 
-    const originalStockedOutQuantity = returnDoc.data().quantity;
-    if (newReturnedQuantity > originalStockedOutQuantity) {
-      throw new Error("Returned quantity exceeds stocked out quantity!");
+    const remainingStockQuantity = transactionDoc.data().remaining;
+    const newRemainingQuantity = remainingStockQuantity + quantityToReturn;
+
+    // Check if the returned quantity exceeds the original stocked-out quantity.
+
+    if (quantityToReturn > currentQuantityInTransaction) {
+      throw new Error("Returned quantity exceeds stock-out quantity");
     }
 
-    // 1. Update the return record with the returned quantity and timestamp.
-    transaction.update(returnRef, {
+    // Determine the new type and status of the transaction.
+    let newType = "stock-out";
+    if (newQuantityInTransaction < 1) {
+      newType = "stock-in";
+    }
+
+    console.log("newType is", newType);
+    console.log("new quantity is", newQuantityInTransaction);
+
+    // 1. Update the original transaction document with the returned details.
+    transaction.update(transactionRef, {
+      type: newType,
       returnedAt: Timestamp.fromDate(new Date()),
-      returnedQuantity: newReturnedQuantity,
+      returnedBy: userId,
+      returnedQuantity: quantityToReturn,
+      remaining: newRemainingQuantity,
+      quantity: newQuantityInTransaction,
     });
 
     // 2. Update the item's quantity in the main inventory.
-    const newInventoryQuantity = (itemDoc.data().quantity || 0) + quantity;
-    transaction.update(itemRef, { quantity: newInventoryQuantity });
-
-    // 3. Create a transaction record for the return event.
-    const transactionsCollectionRef = collection(db, "transactions");
-    const transactionData = {
-      itemId: itemRef.id,
-      userId: userId,
-      itemName: itemDoc.data().itemName,
-      quantity: quantity,
-      remaining: newInventoryQuantity,
-      type: "stock-in",
-      returnedAt: Timestamp.fromDate(new Date()),
-    };
-    const newTransactionRef = doc(transactionsCollectionRef);
-    transaction.set(newTransactionRef, transactionData);
+    transaction.update(itemRef, { quantity: newRemainingQuantity });
   });
 
   revalidatePath("/inventory");

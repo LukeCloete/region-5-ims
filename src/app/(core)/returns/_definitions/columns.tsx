@@ -6,14 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Timestamp } from "firebase/firestore";
 
-// Define the interface for your data.
 export interface Returns {
   itemId: string;
   userEmail: string;
   itemName: string;
   stockInAt: Timestamp;
   stockOutAt: Timestamp;
-  returnedAt: Timestamp; //return date
+  returnedAt: Timestamp;
   quantity: number;
   remaining: number;
   barcode: number;
@@ -23,10 +22,11 @@ export interface Returns {
   category: string;
   itemCondition: string;
   recipientName: string;
+  recipientPhoneNumber: string;
 }
 
 const ALLOWED_ROLES = ["admin", "superuser"];
-// A dedicated component to handle the cell's interactive logic and hooks.
+
 // const ActionCell = ({ item }: { item: Returns }) => {
 //   const { user } = useAuthContext();
 
@@ -75,7 +75,6 @@ export const columns: ColumnDef<Returns>[] = [
     id: "rowNumber",
     header: "#",
     cell: ({ row }) => {
-      // The row.index is a 0-based number, so we add 1 to make it 1-based
       return <div>{row.index + 1}</div>;
     },
   },
@@ -142,7 +141,7 @@ export const columns: ColumnDef<Returns>[] = [
     },
   },
   {
-    accessorKey: "StockInAt",
+    accessorKey: "stockInAt",
     header: ({ column }) => {
       return (
         <Button
@@ -168,7 +167,7 @@ export const columns: ColumnDef<Returns>[] = [
     },
   },
   {
-    accessorKey: "StockOutAt",
+    accessorKey: "stockOutAt",
     header: ({ column }) => {
       return (
         <Button
@@ -227,7 +226,7 @@ export const columns: ColumnDef<Returns>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Quantity
+          Quantity Returned
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -241,7 +240,7 @@ export const columns: ColumnDef<Returns>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Remaining
+          Quantity in Stock
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );

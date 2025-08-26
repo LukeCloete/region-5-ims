@@ -15,6 +15,7 @@ import {
 import ReturnsConfirmationDialog from "../../returns/_components/ReturnsDialog";
 
 export interface Transaction {
+  id: string;
   itemId: string;
   itemName: string;
   quantity: number;
@@ -42,8 +43,9 @@ const ActionCell = ({ transaction }: { transaction: Transaction }) => (
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
         <ReturnsConfirmationDialog
-          itemId={transaction.itemId}
+          transactionId={transaction.id}
           userUid={transaction.userId}
+          quantityIssued={transaction.quantity}
         />
       </DropdownMenuItem>
     </DropdownMenuContent>
@@ -157,7 +159,7 @@ export const columns: ColumnDef<Transaction>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Remaining
+          Remaining in stock
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
