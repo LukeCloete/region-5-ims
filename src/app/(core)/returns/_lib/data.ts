@@ -7,7 +7,6 @@ import {
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { Returns } from "../_definitions/columns";
-import { da } from "date-fns/locale";
 
 /**
  * Fetches all returns from the 'returns' Firestore collection.
@@ -28,6 +27,7 @@ export async function getAllReturns(): Promise<Returns[]> {
     const usersCollectionRef = collection(db, "users");
     const usersSnapshot = await getDocs(usersCollectionRef);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const userMap = new Map<string, any>();
     usersSnapshot.docs.forEach((doc) => {
       userMap.set(doc.id, doc.data());

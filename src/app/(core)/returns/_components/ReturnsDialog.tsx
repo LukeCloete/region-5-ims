@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { CircleDotDashed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getErrorMessage } from "@/lib/utils";
-import { markItemAsStockIn } from "../../inventory/_lib/actions";
 import { markItemAsReturned } from "../_lib/actions";
 import { Input } from "@/components/ui/input";
 

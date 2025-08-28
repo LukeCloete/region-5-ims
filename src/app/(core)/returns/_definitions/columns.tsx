@@ -25,8 +25,6 @@ export interface Returns {
   recipientPhoneNumber: string;
 }
 
-const ALLOWED_ROLES = ["admin", "superuser"];
-
 // const ActionCell = ({ item }: { item: Returns }) => {
 //   const { user } = useAuthContext();
 
