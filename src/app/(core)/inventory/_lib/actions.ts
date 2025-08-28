@@ -57,7 +57,6 @@ export async function markItemAsStockOut(
 
     const currentTimestampFromSA = serverTimestamp();
 
-    const newTransactionRef = doc(transactionsCollectionRef);
     // Create a new transaction record.
     const transactionData = {
       barcode: itemDoc.data().barCode,
@@ -76,6 +75,7 @@ export async function markItemAsStockOut(
       currentTimestamp: currentTimestampFromSA,
       productCode: itemDoc.data().productCode,
     };
+    const newTransactionRef = doc(transactionsCollectionRef);
     transaction.set(newTransactionRef, transactionData);
   });
 
