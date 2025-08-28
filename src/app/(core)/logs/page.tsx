@@ -60,3 +60,6 @@
 //     return [];
 //   }
 // }
+export default function page() {
+  return <div>Logs</div>;
+}
