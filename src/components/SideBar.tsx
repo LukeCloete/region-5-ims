@@ -19,12 +19,38 @@ import {
   Warehouse,
   LogOut,
   ArrowUpDown,
+  ClipboardMinus,
 } from "lucide-react";
 import Image from "next/image";
 import LOGO from "../../public/logo.jpg";
 import { usePathname } from "next/navigation";
 import { AuthUserWithRole } from "@/lib/contexts/AuthContext";
+import { getDataForReport } from "@/app/(core)/dashboard/_lib/data";
 export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
+  const createReport = async () => {
+    // Call the server action to get the file buffer
+    const buffer = await getDataForReport();
+
+    // Create a Blob from the received buffer
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    // Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary link element and trigger the download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "inventory-report.xlsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Clean up the URL object to free up memory
+    URL.revokeObjectURL(url);
+  };
+
   const ALLOWED_ROLES = ["admin", "superuser"];
   const pathname = usePathname();
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false); // State for logout dialog
@@ -132,27 +158,33 @@ export default function SideBar({ user }: { user: AuthUserWithRole | null }) {
         })}
 
         {/* Conditionally render the Reports section ONLY if the user is an admin */}
-        {/* {user && user.role === "admin" && (
-          <Link
-            href="/reports"
-            className={`w-full rounded-xl flex items-center hover:bg-primary/10 justify-start gap-2 p-2 ${
-              pathname === "/reports" ? "bg-primary" : ""
-            }`}
-          >
-            <BarChart3
-              className={`text-md w-5 h-5 ${
-                pathname === "/reports" ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
-              }`}
-            />
-            <div
-              className={`text-sm ${
-                pathname === "/reports" ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
-              }`}
-            >
-              Reports
-            </div>
-          </Link>
-        )} */}
+        {user && user.role === "admin" && (
+          // <Link
+          //   href="/reports"
+          //   className={`w-full rounded-xl flex items-center hover:bg-primary/10 justify-start gap-2 p-2 ${
+          //     pathname === "/reports" ? "bg-primary" : ""
+          //   }`}
+          // >
+          //   {/* <BarChart3
+          //     className={`text-md w-5 h-5 ${
+          //       pathname === "/reports" ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
+          //     }`}
+          //   /> */}
+          //   <div
+          //     className={`text-sm ${
+          //       pathname === "/reports" ? "text-[#f2f2f2]" : "text-[#B3C3CB]"
+          //     }`}
+          //   >
+          //     Generate Report
+          //   </div>
+          // </Link>
+          <div className="w-full rounded-xl flex hover:bg-primary/10 items-center justify-start gap-2 p-2 text-[#B3C3CB]">
+            <ClipboardMinus className="text-md w-5 h-5"></ClipboardMinus>
+            <button className="text-sm" onClick={createReport}>
+              Generate Report
+            </button>
+          </div>
+        )}
       </section>
 
       {/* <section className="flex flex-col gap-1 items-start justify-start">

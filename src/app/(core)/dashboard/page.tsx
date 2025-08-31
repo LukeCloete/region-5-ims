@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import getDataForDashboard from "./_lib/data";
+import { getDataForDashboard } from "./_lib/data";
 
 export default function Page() {
   // function getFormattedDate(date: Date): string {
