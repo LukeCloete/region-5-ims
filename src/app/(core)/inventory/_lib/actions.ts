@@ -75,7 +75,8 @@ export async function markItemAsStockOut(
       currentTimestamp: currentTimestampFromSA,
       productCode: itemDoc.data().productCode,
     };
-    await addDoc(transactionsCollectionRef, transactionData);
+    const newTransactionRef = doc(transactionsCollectionRef);
+    transaction.set(newTransactionRef, transactionData);
   });
 
   revalidatePath("/inventory");
@@ -107,7 +108,6 @@ export async function markItemAsStockIn(itemId: string, userId: string) {
   });
 
   revalidatePath("/inventory");
-  revalidatePath("/transactions");
   redirect("/inventory");
 }
 

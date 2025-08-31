@@ -82,26 +82,3 @@ export async function getAllTransactions(): Promise<Transaction[]> {
     return [];
   }
 }
-
-export async function getCurrentUserDetails() {
-  try {
-    const usersCollectionRef = collection(db, "users");
-    const usersSnapshot = await getDocs(usersCollectionRef);
-
-    const users = usersSnapshot.docs.map((doc) => {
-      const docData = doc.data();
-
-      return {
-        id: doc.id,
-        name: docData.name || "",
-        email: docData.email || "",
-        role: docData.role || "",
-      };
-    });
-
-    return users;
-  } catch (error) {
-    console.error("Failed to fetch transactions data:", error);
-    return [];
-  }
-}
