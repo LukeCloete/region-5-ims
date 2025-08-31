@@ -111,9 +111,6 @@ export default function Page() {
   useEffect(() => {
     async function fetchMetrics() {
       const metricsData = await getDataForDashboard();
-      console.log("can you see this log");
-      console.log("metricsData", metricsData);
-      console.log(typeof metricsData);
 
       // If metricsData is an array, use the first item or aggregate as needed
       const metrics = Array.isArray(metricsData) ? metricsData[0] : metricsData;
