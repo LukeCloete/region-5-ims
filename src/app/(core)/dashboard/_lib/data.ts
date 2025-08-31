@@ -5,11 +5,9 @@ import {
   where,
   getCountFromServer,
 } from "firebase/firestore";
-import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase";
 import ExcelJS from "exceljs";
 import { getAllItems } from "../../inventory/_lib/data";
-const filePath = "./simple_report.xlsx";
 
 export interface Metrics {
   totalInventory: number;
