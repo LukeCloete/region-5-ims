@@ -5,7 +5,11 @@ import {
   where,
   getCountFromServer,
 } from "firebase/firestore";
+import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase";
+import ExcelJS from "exceljs";
+const filePath = "./simple_report.xlsx";
+
 export interface Metrics {
   totalInventory: number;
   dailyStockIn: number;
@@ -16,7 +20,7 @@ export interface Metrics {
   totalItemsReturns: number;
 }
 
-export default async function getDataForDashboard(): Promise<Metrics[]> {
+export async function getDataForDashboard(): Promise<Metrics[]> {
   const num1 = 1;
   const num2 = 2;
   // The below is how to get all data of items from the database
@@ -107,4 +111,47 @@ export default async function getDataForDashboard(): Promise<Metrics[]> {
     console.error("Failed to fetch inventory data:", error);
     return [];
   }
+}
+
+export async function getDataForReport() {
+  console.log("This log is from server action");
+  // 1. Create a new Excel workbook
+  const workbook = new ExcelJS.Workbook();
+
+  // 2. Add a new worksheet to the workbook
+  const worksheet = workbook.addWorksheet("My First Sheet");
+
+  // 3. Add headers to the worksheet
+  worksheet.columns = [
+    { header: "Product ID", key: "id", width: 15 },
+    { header: "Product Name", key: "name", width: 30 },
+    { header: "Quantity", key: "quantity", width: 15 },
+  ];
+
+  // 4. Add some data rows to the worksheet
+  worksheet.addRow({ id: 1, name: "Wireless Keyboard", quantity: 50 });
+  worksheet.addRow({ id: 2, name: "Gaming Mouse", quantity: 25 });
+  worksheet.addRow({ id: 3, name: "HD Monitor", quantity: 10 });
+  worksheet.addRow({ id: 4, name: "Webcam", quantity: 75 });
+
+  // Use the buffering approach to return the data to the client.
+  // This is different from the streaming approach used in the API route.
+  const buffer = await workbook.xlsx.writeBuffer();
+
+  return buffer;
+
+  // // 5. Write the workbook to a buffer
+  // // This is the correct way to get the file data in a web environment.
+  // try {
+  //   const buffer = await workbook.xlsx.writeBuffer();
+
+  //   // In a real web application, you would send this buffer back in an HTTP response.
+  //   // For this demonstration, we'll log its size.
+  //   console.log(
+  //     `Excel file successfully generated in memory as a buffer with a size of ${buffer.byteLength} bytes.`
+  //   );
+  //   console.log(buffer, "This is what the bufffer looks like");
+  // } catch (error) {
+  //   console.error("Error creating the Excel buffer:", error);
+  // }
 }

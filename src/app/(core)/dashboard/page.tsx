@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import getDataForDashboard from "./_lib/data";
+import { getDataForDashboard, getDataForReport } from "./_lib/data";
 
 export default function Page() {
   // function getFormattedDate(date: Date): string {
@@ -27,6 +27,30 @@ export default function Page() {
   const [user] = useAuthState(auth);
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [isEditing, setIsEditing] = useState(!user?.displayName);
+
+  const handleDownload = async () => {
+    // Call the server action to get the file buffer
+    const buffer = await getDataForReport();
+
+    // Create a Blob from the received buffer
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    // Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary link element and trigger the download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "my-data.xlsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Clean up the URL object to free up memory
+    URL.revokeObjectURL(url);
+  };
 
   if (!user) {
     redirect("/login");
@@ -245,6 +269,12 @@ export default function Page() {
               </CardHeader>
               <CardFooter className="flex-col items-start gap-1.5 text-sm"></CardFooter>
             </Card> */}
+          </div>
+          <div>
+            <p>This is to test the report generation feature</p>
+            <button onClick={handleDownload}>
+              This button is to generate a report
+            </button>
           </div>
         </section>
       )}
