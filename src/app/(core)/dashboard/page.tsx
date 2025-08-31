@@ -28,7 +28,7 @@ export default function Page() {
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [isEditing, setIsEditing] = useState(!user?.displayName);
 
-  const handleDownload = async () => {
+  const createReport = async () => {
     // Call the server action to get the file buffer
     const buffer = await getDataForReport();
 
@@ -43,7 +43,7 @@ export default function Page() {
     // Create a temporary link element and trigger the download
     const link = document.createElement("a");
     link.href = url;
-    link.download = "my-data.xlsx";
+    link.download = "inventory-report.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -272,7 +272,7 @@ export default function Page() {
           </div>
           <div>
             <p>This is to test the report generation feature</p>
-            <button onClick={handleDownload}>
+            <button onClick={createReport}>
               This button is to generate a report
             </button>
           </div>
